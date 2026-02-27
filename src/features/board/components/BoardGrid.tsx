@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useMemo } from 'react';
+import { useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import { useBoardStore } from '@/store/useBoardStore';
 import { useEconomyStore } from '@/store/useEconomyStore';
 import { Cell } from './Cell';
@@ -71,6 +71,13 @@ export function BoardGrid() {
         } : null);
     }, DRAG_THROTTLE_MS), []); // 60fps throttle
 
+    // Cleanup throttled function on unmount
+    useEffect(() => {
+        return () => {
+            updateDragTarget.cancel();
+        };
+    }, [updateDragTarget]);
+
     const handlePointerMove = useCallback((e: React.PointerEvent) => {
         if (dragState?.isDragging && boardRef.current) {
             // Update ghost position directly via ref for performance (no re-render)
@@ -90,11 +97,6 @@ export function BoardGrid() {
             if (targetRow >= 0 && targetRow < cells.length &&
                 targetCol >= 0 && targetCol < cells[0].length) {
                 
-                // Only proceed if target cell changed
-                if (targetRow === dragState.targetRow && targetCol === dragState.targetCol) {
-                    return;
-                }
-                
                 const targetCell = cells[targetRow][targetCol];
                 const sourceCell = cells[dragState.sourceRow][dragState.sourceCol];
                 
@@ -104,6 +106,13 @@ export function BoardGrid() {
                     sourceCell.item?.definitionId,
                     ITEM_MAP
                 );
+
+                // Only proceed if target cell or merge status changed
+                if (targetRow === dragState.targetRow && 
+                    targetCol === dragState.targetCol && 
+                    canMerge === dragState.canMerge) {
+                    return;
+                }
 
                 // Throttled state update
                 updateDragTarget(targetRow, targetCol, canMerge);

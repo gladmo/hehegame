@@ -4,14 +4,14 @@
  * Throttles a function to be called at most once per specified interval
  * Uses requestAnimationFrame for smooth animations
  */
-export function throttle<T extends (...args: any[]) => any>(
+export function throttle<T extends (...args: any[]) => void>(
   func: T,
   limitMs: number
-): (...args: Parameters<T>) => void {
+): T & { cancel: () => void } {
   let lastCall = 0;
   let timeoutId: number | null = null;
 
-  return function (this: any, ...args: Parameters<T>) {
+  const throttled = function (this: any, ...args: Parameters<T>) {
     const now = Date.now();
     const timeSinceLastCall = now - lastCall;
 
@@ -28,7 +28,17 @@ export function throttle<T extends (...args: any[]) => any>(
         timeoutId = null;
       }, limitMs - timeSinceLastCall);
     }
+  } as T & { cancel: () => void };
+
+  // Add cancel method to clear pending timeouts
+  throttled.cancel = () => {
+    if (timeoutId !== null) {
+      clearTimeout(timeoutId);
+      timeoutId = null;
+    }
   };
+
+  return throttled;
 }
 
 /**
