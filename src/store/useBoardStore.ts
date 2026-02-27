@@ -128,6 +128,11 @@ export const useBoardStore = create<BoardStore>()(
                 return false;
             }
 
+            // Prevent merging with itself
+            if (rowA === rowB && colA === colB) {
+                return false;
+            }
+
             const itemA = ITEM_MAP[cellA.item.definitionId];
             const itemB = ITEM_MAP[cellB.item.definitionId];
 
@@ -136,14 +141,14 @@ export const useBoardStore = create<BoardStore>()(
                 return false;
             }
 
-            // Merge into cellA position
+            // Merge into cellB position (target cell)
             set((draft) => {
-                draft.cells[rowA][colA].item = {
+                draft.cells[rowB][colB].item = {
                     instanceId: nanoid(),
                     definitionId: itemA.mergesInto!,
                     createdAt: Date.now(),
                 };
-                draft.cells[rowB][colB].item = null;
+                draft.cells[rowA][colA].item = null;
             });
             
             // Record the merged item in collection

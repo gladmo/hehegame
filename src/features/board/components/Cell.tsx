@@ -3,15 +3,16 @@ import { motion } from 'framer-motion';
 import type { BoardCell } from '@/shared/types';
 import { ITEM_MAP } from '@/data/items';
 import { LAUNCHER_MAP } from '@/data/launchers';
-import { CELL_SIZE } from '@/shared/constants';
+import { CELL_SIZE, DROP_TARGET_COLOR } from '@/shared/constants';
 
 interface CellProps {
     cell: BoardCell;
     onPointerDown: (e: React.PointerEvent, row: number, col: number) => void;
     isDraggingFrom: boolean;
+    isDropTarget?: boolean;
 }
 
-export const Cell = memo(function Cell({ cell, onPointerDown, isDraggingFrom }: CellProps) {
+export const Cell = memo(function Cell({ cell, onPointerDown, isDraggingFrom, isDropTarget = false }: CellProps) {
     const getCellStyle = () => {
         const baseStyle: React.CSSProperties = {
             width: CELL_SIZE,
@@ -46,6 +47,15 @@ export const Cell = memo(function Cell({ cell, onPointerDown, isDraggingFrom }: 
                 ...baseStyle,
                 background: 'rgba(255, 255, 255, 0.5)',
                 opacity: 0.5,
+            };
+        }
+
+        if (isDropTarget) {
+            return {
+                ...baseStyle,
+                background: 'rgba(74, 222, 128, 0.3)',
+                border: `2px solid ${DROP_TARGET_COLOR}`,
+                boxShadow: `0 0 12px rgba(74, 222, 128, 0.6)`,
             };
         }
 

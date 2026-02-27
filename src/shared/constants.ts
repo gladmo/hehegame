@@ -5,6 +5,9 @@ export const BOARD_ROWS = 7;
 export const BOARD_COLS = 9;
 export const CELL_SIZE = 64;
 
+// UI Colors
+export const DROP_TARGET_COLOR = '#4ade80'; // Green color for valid drop targets and merge feedback
+
 // Economy
 export const INITIAL_COINS = 100;
 export const INITIAL_GEMS = 20;
