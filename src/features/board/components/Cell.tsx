@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import type { BoardCell } from '@/shared/types';
 import { ITEM_MAP } from '@/data/items';
 import { LAUNCHER_MAP } from '@/data/launchers';
-import { CELL_SIZE } from '@/shared/constants';
+import { CELL_SIZE, DROP_TARGET_COLOR } from '@/shared/constants';
 
 interface CellProps {
     cell: BoardCell;
@@ -54,8 +54,8 @@ export const Cell = memo(function Cell({ cell, onPointerDown, isDraggingFrom, is
             return {
                 ...baseStyle,
                 background: 'rgba(74, 222, 128, 0.3)',
-                border: '2px solid #4ade80',
-                boxShadow: '0 0 12px rgba(74, 222, 128, 0.6)',
+                border: `2px solid ${DROP_TARGET_COLOR}`,
+                boxShadow: `0 0 12px rgba(74, 222, 128, 0.6)`,
             };
         }
 

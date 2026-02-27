@@ -2,7 +2,7 @@ import { useState, useRef, useCallback } from 'react';
 import { useBoardStore } from '@/store/useBoardStore';
 import { useEconomyStore } from '@/store/useEconomyStore';
 import { Cell } from './Cell';
-import { CELL_SIZE } from '@/shared/constants';
+import { CELL_SIZE, DROP_TARGET_COLOR } from '@/shared/constants';
 import { LAUNCHER_MAP } from '@/data/launchers';
 import { ITEM_MAP } from '@/data/items';
 
@@ -202,7 +202,7 @@ export function BoardGrid() {
                         opacity: 0.8,
                         zIndex: 1000,
                         transform: 'scale(1.1)',
-                        filter: dragState.canMerge ? 'drop-shadow(0 0 8px #4ade80)' : 'none',
+                        filter: dragState.canMerge ? `drop-shadow(0 0 8px ${DROP_TARGET_COLOR})` : 'none',
                     }}
                 >
                     <ItemSprite itemDefId={dragState.itemDefId} />
