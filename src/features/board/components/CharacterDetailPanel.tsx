@@ -10,11 +10,11 @@ export function CharacterDetailPanel() {
 
     return (
         <div style={{
-            width: '140px',
+            width: '160px',
             display: 'flex',
             flexDirection: 'column',
-            gap: '12px',
-            padding: '16px 12px',
+            gap: '8px',
+            padding: '12px 10px',
             background: 'rgba(255, 255, 255, 0.7)',
             borderRadius: '12px',
             alignSelf: 'flex-start',
@@ -27,12 +27,12 @@ export function CharacterDetailPanel() {
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
-                        gap: '8px',
-                        padding: '12px 8px',
+                        gap: '6px',
+                        padding: '10px 6px',
                         background: 'rgba(255, 255, 255, 0.9)',
                         borderRadius: '12px',
                         boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                        minHeight: '100px',
+                        minHeight: '80px',
                     }}
                 >
                     {/* Multiplier badge (top-right) */}
@@ -60,8 +60,8 @@ export function CharacterDetailPanel() {
 
                     {/* Character avatar */}
                     <div style={{
-                        fontSize: '36px',
-                        marginBottom: '4px',
+                        fontSize: '32px',
+                        marginBottom: '2px',
                     }}>
                         {char.avatar}
                     </div>
@@ -71,7 +71,7 @@ export function CharacterDetailPanel() {
                         <div style={{
                             display: 'grid',
                             gridTemplateColumns: 'repeat(2, 1fr)',
-                            gap: '6px',
+                            gap: '4px',
                             width: '100%',
                         }}>
                             {char.items.map((item, itemIdx) => (
@@ -80,11 +80,11 @@ export function CharacterDetailPanel() {
                                     style={{
                                         background: 'linear-gradient(135deg, #ffecd2, #fcb69f)',
                                         borderRadius: '8px',
-                                        padding: '10px',
+                                        padding: '8px',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        fontSize: '28px',
+                                        fontSize: '24px',
                                         aspectRatio: '1',
                                     }}
                                 >

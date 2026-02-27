@@ -104,7 +104,7 @@ export function BoardGrid() {
                     gridTemplateColumns: `repeat(${cells[0]?.length || 0}, ${CELL_SIZE}px)`,
                     gap: '2px',
                     background: 'rgba(255, 255, 255, 0.3)',
-                    padding: '8px',
+                    padding: '12px',
                     borderRadius: '12px',
                     boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
                 }}

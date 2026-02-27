@@ -17,7 +17,7 @@ export function GameScreen() {
             <HUD />
 
             {/* Character Row */}
-            <div style={{ padding: '16px 24px 0' }}>
+            <div style={{ padding: '8px 24px 0' }}>
                 <CharacterPanel />
             </div>
 
@@ -25,8 +25,8 @@ export function GameScreen() {
             <div style={{
                 flex: 1,
                 display: 'flex',
-                gap: '16px',
-                padding: '16px 24px',
+                gap: '12px',
+                padding: '12px 24px',
                 overflow: 'hidden',
                 alignItems: 'flex-start',
             }}>
@@ -41,8 +41,8 @@ export function GameScreen() {
                     {/* Tool bar positioned at bottom-left corner of board */}
                     <div style={{
                         position: 'absolute',
-                        bottom: '8px',
-                        left: '8px',
+                        bottom: '12px',
+                        left: '12px',
                     }}>
                         <ToolBar />
                     </div>
@@ -54,21 +54,21 @@ export function GameScreen() {
 
             {/* Bottom Red Button */}
             <div style={{
-                padding: '0 24px 16px',
+                padding: '0 24px 12px',
                 display: 'flex',
-                gap: '16px',
+                gap: '12px',
                 alignItems: 'center',
             }}>
                 {/* Left icon */}
                 <div style={{
-                    width: '60px',
-                    height: '60px',
+                    width: '56px',
+                    height: '56px',
                     background: 'rgba(139, 69, 19, 0.7)',
                     borderRadius: '8px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    fontSize: '32px',
+                    fontSize: '30px',
                 }}>
                     📜
                 </div>
@@ -76,7 +76,7 @@ export function GameScreen() {
                 {/* Red button */}
                 <button style={{
                     flex: 1,
-                    padding: '16px',
+                    padding: '14px',
                     background: 'linear-gradient(180deg, #ff6b6b 0%, #d63031 100%)',
                     color: 'white',
                     border: 'none',
@@ -92,14 +92,14 @@ export function GameScreen() {
 
                 {/* Right icon */}
                 <div style={{
-                    width: '60px',
-                    height: '60px',
+                    width: '56px',
+                    height: '56px',
                     background: 'rgba(255, 255, 255, 0.7)',
                     borderRadius: '50%',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    fontSize: '32px',
+                    fontSize: '30px',
                     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
                 }}>
                     🏠

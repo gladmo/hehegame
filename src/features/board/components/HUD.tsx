@@ -27,15 +27,15 @@ export function HUD() {
         <div style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '16px',
-            padding: '12px 24px',
+            gap: '12px',
+            padding: '10px 24px',
             background: 'rgba(255, 255, 255, 0.9)',
             boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
         }}>
             {/* Circular Level Indicator */}
             <div style={{
-                width: '56px',
-                height: '56px',
+                width: '52px',
+                height: '52px',
                 borderRadius: '50%',
                 background: 'linear-gradient(135deg, #ff9a76 0%, #ff6b9d 100%)',
                 border: '3px solid white',
@@ -43,7 +43,7 @@ export function HUD() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '20px',
+                fontSize: '18px',
                 fontWeight: 'bold',
                 color: 'white',
             }}>
@@ -60,7 +60,7 @@ export function HUD() {
             </div>
 
             {/* Resources Row */}
-            <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flex: 1 }}>
+            <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flex: 1 }}>
                 {/* Stamina with timer */}
                 <div style={{
                     display: 'flex',
@@ -144,7 +144,7 @@ export function HUD() {
             {/* Menu buttons - placeholders matching UI.png */}
             <div style={{
                 display: 'flex',
-                gap: '12px',
+                gap: '8px',
                 alignItems: 'center',
             }}>
                 <button style={{

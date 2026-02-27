@@ -32,8 +32,8 @@ export function ToolBar() {
     return (
         <div style={{
             display: 'flex',
-            gap: '12px',
-            padding: '12px',
+            gap: '8px',
+            padding: '10px',
             background: 'rgba(255, 255, 255, 0.9)',
             borderRadius: '12px',
             boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
@@ -50,15 +50,15 @@ export function ToolBar() {
                         title={tool.description}
                         style={{
                             position: 'relative',
-                            padding: '12px',
+                            padding: '10px',
                             background: isActive ? '#4caf50' : count > 0 ? '#ffb69f' : '#ddd',
                             color: isActive || count > 0 ? 'white' : '#999',
                             border: isActive ? '3px solid #2e7d32' : 'none',
                             borderRadius: '8px',
                             cursor: count > 0 ? 'pointer' : 'not-allowed',
-                            fontSize: '24px',
-                            width: '60px',
-                            height: '60px',
+                            fontSize: '22px',
+                            width: '54px',
+                            height: '54px',
                             transition: 'all 0.2s',
                             opacity: count > 0 ? 1 : 0.5,
                         }}

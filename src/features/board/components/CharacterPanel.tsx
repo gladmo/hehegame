@@ -17,7 +17,7 @@ function CharacterCard({ avatar, name, health, maxHealth, multiplier, badge, col
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            gap: '8px',
+            gap: '6px',
         }}>
             {/* Number badge (top-left) */}
             {badge && (
@@ -69,14 +69,14 @@ function CharacterCard({ avatar, name, health, maxHealth, multiplier, badge, col
 
             {/* Character Avatar */}
             <div style={{
-                width: '80px',
-                height: '100px',
+                width: '72px',
+                height: '92px',
                 background: color,
                 borderRadius: '12px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '48px',
+                fontSize: '44px',
                 boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
                 border: '3px solid rgba(255, 255, 255, 0.5)',
             }}>
@@ -85,7 +85,7 @@ function CharacterCard({ avatar, name, health, maxHealth, multiplier, badge, col
 
             {/* Health Bar */}
             <div style={{
-                width: '90px',
+                width: '80px',
                 background: 'rgba(0, 0, 0, 0.3)',
                 borderRadius: '8px',
                 padding: '4px',
@@ -141,9 +141,9 @@ export function CharacterPanel() {
     return (
         <div style={{
             display: 'flex',
-            gap: '16px',
-            padding: '16px 24px',
-            background: 'rgba(255, 255, 255, 0.5)',
+            gap: '12px',
+            padding: '12px 16px',
+            background: 'rgba(255, 255, 255, 0.4)',
             borderRadius: '12px',
             justifyContent: 'center',
         }}>
