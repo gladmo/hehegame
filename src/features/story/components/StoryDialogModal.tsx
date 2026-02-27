@@ -85,7 +85,7 @@ export function StoryDialogModal() {
                             {chapter.title}
                         </h2>
                         <p style={{ margin: 0, fontSize: '14px', color: '#999' }}>
-                            第 {currentDialogIndex + 1}/{chapter.dialogs.length} 章节
+                            第 {currentDialogIndex + 1}/{chapter.dialogs.length} 对话
                         </p>
                     </div>
 

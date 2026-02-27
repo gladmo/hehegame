@@ -50,7 +50,7 @@ export function ShopScreen() {
 
     const handleBuyGems = (amount: number) => {
         // Simulate purchase - in real app this would open payment dialog
-        alert(`模拟购买 ${amount} 钻石 - 实际应用中会打开支付对话框`);
+        // For demo purposes, just add the gems
         addGems(amount);
     };
 
