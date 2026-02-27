@@ -4,6 +4,10 @@ import { usePlayerStore } from '@/store/usePlayerStore';
 import { useBoardStore } from '@/store/useBoardStore';
 import { ITEM_MAP } from '@/data/items';
 
+function isOrderComplete(order: { requirements: { itemDefinitionId: string; quantity: number }[]; fulfilled: Record<string, number> }): boolean {
+    return order.requirements.every(req => (order.fulfilled[req.itemDefinitionId] || 0) >= req.quantity);
+}
+
 export function OrderPanel() {
     const orders = useOrderStore(state => state.orders);
     const deliverItem = useOrderStore(state => state.deliverItem);
@@ -24,22 +28,11 @@ export function OrderPanel() {
                         
                         // Check if order is complete
                         const order = orders.find(o => o.id === orderId);
-                        if (order) {
-                            let isComplete = true;
-                            for (const req of order.requirements) {
-                                const fulfilled = order.fulfilled[req.itemDefinitionId] || 0;
-                                if (fulfilled < req.quantity) {
-                                    isComplete = false;
-                                    break;
-                                }
-                            }
-                            
-                            if (isComplete) {
-                                const completedOrder = completeOrder(orderId);
-                                if (completedOrder) {
-                                    addCoins(completedOrder.rewards.coins);
-                                    addXp(completedOrder.rewards.xp);
-                                }
+                        if (order && isOrderComplete(order)) {
+                            const completedOrder = completeOrder(orderId);
+                            if (completedOrder) {
+                                addCoins(completedOrder.rewards.coins);
+                                addXp(completedOrder.rewards.xp);
                             }
                         }
                         return;

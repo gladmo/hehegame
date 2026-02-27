@@ -109,7 +109,7 @@ export function BoardGrid() {
                     boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
                 }}
             >
-                {cells.map((row, rowIdx) =>
+                {cells.map((row) =>
                     row.map((cell) => (
                         <Cell
                             key={`${cell.row}-${cell.col}`}

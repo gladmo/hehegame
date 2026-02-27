@@ -134,11 +134,19 @@ export const useOrderStore = create<OrderStore>()(
 
         refreshOrders: (playerLevel) => {
             const state = get();
-            const difficulty: OrderDifficulty = playerLevel < 3 ? 'easy' : playerLevel < 7 ? 'medium' : 'hard';
-            
-            while (state.orders.length < MAX_ACTIVE_ORDERS) {
-                get().generateOrder(playerLevel, difficulty);
+            if (state.orders.length >= MAX_ACTIVE_ORDERS) {
+                return;
             }
+
+            const difficulty: OrderDifficulty = playerLevel < 3 ? 'easy' : playerLevel < 7 ? 'medium' : 'hard';
+            const ordersToGenerate = MAX_ACTIVE_ORDERS - state.orders.length;
+
+            set((draft) => {
+                for (let i = 0; i < ordersToGenerate; i++) {
+                    const order = generateRandomOrder(playerLevel, difficulty);
+                    draft.orders.push(order);
+                }
+            });
         },
     }))
 );
