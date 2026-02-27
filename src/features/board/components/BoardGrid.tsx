@@ -1,10 +1,11 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useMemo } from 'react';
 import { useBoardStore } from '@/store/useBoardStore';
 import { useEconomyStore } from '@/store/useEconomyStore';
 import { Cell } from './Cell';
 import { CELL_SIZE, DROP_TARGET_COLOR } from '@/shared/constants';
 import { LAUNCHER_MAP } from '@/data/launchers';
 import { ITEM_MAP } from '@/data/items';
+import { throttle, canItemsMerge } from '@/shared/utils';
 
 interface DragState {
     isDragging: boolean;
@@ -56,9 +57,23 @@ export function BoardGrid() {
         }
     }, [cells, spawnItem, spendStamina]);
 
+    // Throttled state update for visual feedback
+    const updateDragTarget = useMemo(() => throttle((
+        targetRow: number | null,
+        targetCol: number | null,
+        canMerge: boolean
+    ) => {
+        setDragState(prev => prev ? {
+            ...prev,
+            targetRow,
+            targetCol,
+            canMerge,
+        } : null);
+    }, 16), []); // 60fps throttle
+
     const handlePointerMove = useCallback((e: React.PointerEvent) => {
         if (dragState?.isDragging && boardRef.current) {
-            // Update ghost position directly via ref for performance
+            // Update ghost position directly via ref for performance (no re-render)
             if (ghostRef.current) {
                 ghostRef.current.style.left = `${e.clientX - CELL_SIZE / 2}px`;
                 ghostRef.current.style.top = `${e.clientY - CELL_SIZE / 2}px`;
@@ -75,41 +90,31 @@ export function BoardGrid() {
             if (targetRow >= 0 && targetRow < cells.length &&
                 targetCol >= 0 && targetCol < cells[0].length) {
                 
+                // Only proceed if target cell changed
+                if (targetRow === dragState.targetRow && targetCol === dragState.targetCol) {
+                    return;
+                }
+                
                 const targetCell = cells[targetRow][targetCol];
                 const sourceCell = cells[dragState.sourceRow][dragState.sourceCol];
                 
-                // Determine if merge is possible
-                const canMerge = !!(
-                    targetCell.item && 
-                    sourceCell.item &&
-                    targetCell.item.definitionId === sourceCell.item.definitionId &&
-                    ITEM_MAP[targetCell.item.definitionId]?.mergesInto
+                // Determine if merge is possible using utility function
+                const canMerge = canItemsMerge(
+                    targetCell.item?.definitionId,
+                    sourceCell.item?.definitionId,
+                    ITEM_MAP
                 );
 
-                // Only update state if target changed or canMerge status changed
-                if (targetRow !== dragState.targetRow || 
-                    targetCol !== dragState.targetCol || 
-                    canMerge !== dragState.canMerge) {
-                    setDragState(prev => prev ? {
-                        ...prev,
-                        targetRow,
-                        targetCol,
-                        canMerge,
-                    } : null);
-                }
+                // Throttled state update
+                updateDragTarget(targetRow, targetCol, canMerge);
             } else {
-                // Dragging outside board - clear target
+                // Dragging outside board - clear target only if needed
                 if (dragState.targetRow !== null || dragState.targetCol !== null) {
-                    setDragState(prev => prev ? {
-                        ...prev,
-                        targetRow: null,
-                        targetCol: null,
-                        canMerge: false,
-                    } : null);
+                    updateDragTarget(null, null, false);
                 }
             }
         }
-    }, [dragState, cells]);
+    }, [dragState, cells, updateDragTarget]);
 
     const handlePointerUp = useCallback((e: React.PointerEvent) => {
         if (!dragState?.isDragging || !boardRef.current) {
@@ -136,9 +141,8 @@ export function BoardGrid() {
                 return;
             }
 
-            // Try to merge if target has same item
-            if (targetCell.item && sourceCell.item &&
-                targetCell.item.definitionId === sourceCell.item.definitionId) {
+            // Try to merge if items can be merged (use utility function)
+            if (canItemsMerge(targetCell.item?.definitionId, sourceCell.item?.definitionId, ITEM_MAP)) {
                 mergeItems(dragState.sourceRow, dragState.sourceCol, targetRow, targetCol);
             } else if (!targetCell.item && targetCell.type === 'normal') {
                 // Move to empty cell

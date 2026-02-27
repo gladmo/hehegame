@@ -104,4 +104,14 @@ export const Cell = memo(function Cell({ cell, onPointerDown, isDraggingFrom, is
             {renderContent()}
         </div>
     );
+}, (prevProps, nextProps) => {
+    // Custom comparison function to prevent unnecessary re-renders
+    // Only re-render if the cell content, drag state, or drop target status changed
+    return (
+        prevProps.cell.item?.instanceId === nextProps.cell.item?.instanceId &&
+        prevProps.cell.type === nextProps.cell.type &&
+        prevProps.cell.launcherId === nextProps.cell.launcherId &&
+        prevProps.isDraggingFrom === nextProps.isDraggingFrom &&
+        prevProps.isDropTarget === nextProps.isDropTarget
+    );
 });
