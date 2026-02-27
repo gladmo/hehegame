@@ -8,6 +8,9 @@ export const CELL_SIZE = 64;
 // UI Colors
 export const DROP_TARGET_COLOR = '#4ade80'; // Green color for valid drop targets and merge feedback
 
+// Performance
+export const DRAG_THROTTLE_MS = 16; // 60fps throttle for drag operations
+
 // Economy
 export const INITIAL_COINS = 100;
 export const INITIAL_GEMS = 20;

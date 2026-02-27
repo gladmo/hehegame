@@ -2,7 +2,7 @@ import { useState, useRef, useCallback, useMemo } from 'react';
 import { useBoardStore } from '@/store/useBoardStore';
 import { useEconomyStore } from '@/store/useEconomyStore';
 import { Cell } from './Cell';
-import { CELL_SIZE, DROP_TARGET_COLOR } from '@/shared/constants';
+import { CELL_SIZE, DROP_TARGET_COLOR, DRAG_THROTTLE_MS } from '@/shared/constants';
 import { LAUNCHER_MAP } from '@/data/launchers';
 import { ITEM_MAP } from '@/data/items';
 import { throttle, canItemsMerge } from '@/shared/utils';
@@ -69,7 +69,7 @@ export function BoardGrid() {
             targetCol,
             canMerge,
         } : null);
-    }, 16), []); // 60fps throttle
+    }, DRAG_THROTTLE_MS), []); // 60fps throttle
 
     const handlePointerMove = useCallback((e: React.PointerEvent) => {
         if (dragState?.isDragging && boardRef.current) {
@@ -153,6 +153,18 @@ export function BoardGrid() {
         setDragState(null);
     }, [dragState, cells, moveItem, mergeItems]);
 
+    // Memoize board style to prevent recalculation on every render
+    const boardStyle = useMemo(() => ({
+        display: 'grid',
+        gridTemplateRows: `repeat(${cells.length}, ${CELL_SIZE}px)`,
+        gridTemplateColumns: `repeat(${cells[0]?.length || 0}, ${CELL_SIZE}px)`,
+        gap: '2px',
+        background: 'rgba(255, 255, 255, 0.3)',
+        padding: '8px',
+        borderRadius: '12px',
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+    }), [cells.length, cells[0]?.length]);
+
     return (
         <div style={{ position: 'relative', userSelect: 'none' }}>
             <div
@@ -160,16 +172,7 @@ export function BoardGrid() {
                 onPointerMove={handlePointerMove}
                 onPointerUp={handlePointerUp}
                 onPointerCancel={() => setDragState(null)}
-                style={{
-                    display: 'grid',
-                    gridTemplateRows: `repeat(${cells.length}, ${CELL_SIZE}px)`,
-                    gridTemplateColumns: `repeat(${cells[0]?.length || 0}, ${CELL_SIZE}px)`,
-                    gap: '2px',
-                    background: 'rgba(255, 255, 255, 0.3)',
-                    padding: '8px',
-                    borderRadius: '12px',
-                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
-                }}
+                style={boardStyle}
             >
                 {cells.map((row) =>
                     row.map((cell) => {
