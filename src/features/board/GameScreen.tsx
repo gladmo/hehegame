@@ -1,6 +1,7 @@
 import { BoardGrid } from './components/BoardGrid';
 import { HUD } from './components/HUD';
 import { OrderPanel } from './components/OrderPanel';
+import { ToolBar } from '@/features/tools/components/ToolBar';
 
 export function GameScreen() {
     return (
@@ -19,7 +20,10 @@ export function GameScreen() {
                 padding: '16px',
                 overflow: 'hidden',
             }}>
-                <BoardGrid />
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    <BoardGrid />
+                    <ToolBar />
+                </div>
                 <OrderPanel />
             </div>
         </div>
