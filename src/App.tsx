@@ -9,6 +9,7 @@ import { RenovationScreen } from './features/renovation/components/RenovationScr
 import { CollectionScreen } from './features/collection/CollectionScreen';
 import { BattlePassScreen } from './features/battlepass/BattlePassScreen';
 import { ShopScreen } from './features/shop/ShopScreen';
+import { StoryDialogModal } from './features/story/components/StoryDialogModal';
 
 function App() {
     const tickStaminaRegen = useEconomyStore(state => state.tickStaminaRegen);
@@ -59,6 +60,7 @@ function App() {
                 {renderScreen()}
             </div>
             <BottomNav />
+            <StoryDialogModal />
         </div>
     );
 }
