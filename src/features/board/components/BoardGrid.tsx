@@ -14,6 +14,8 @@ interface DragState {
     targetRow: number | null;
     targetCol: number | null;
     canMerge: boolean;
+    initialX: number;
+    initialY: number;
 }
 
 export function BoardGrid() {
@@ -40,6 +42,8 @@ export function BoardGrid() {
                 targetRow: null,
                 targetCol: null,
                 canMerge: false,
+                initialX: e.clientX,
+                initialY: e.clientY,
             });
             e.currentTarget.setPointerCapture(e.pointerId);
         } else if (cell.type === 'launcher' && cell.launcherId) {
@@ -190,8 +194,8 @@ export function BoardGrid() {
                     ref={ghostRef}
                     style={{
                         position: 'fixed',
-                        left: 0,
-                        top: 0,
+                        left: dragState.initialX - CELL_SIZE / 2,
+                        top: dragState.initialY - CELL_SIZE / 2,
                         width: CELL_SIZE,
                         height: CELL_SIZE,
                         pointerEvents: 'none',
