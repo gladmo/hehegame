@@ -4,6 +4,7 @@ import { nanoid } from 'nanoid';
 import type { BoardState, BoardCell, ItemInstance, ToolType } from '@/shared/types';
 import { BOARD_ROWS, BOARD_COLS } from '@/shared/constants';
 import { ITEM_MAP } from '@/data/items';
+import { useCollectionStore } from './useCollectionStore';
 
 interface BoardStore extends BoardState {
     // Actions
@@ -85,6 +86,10 @@ export const useBoardStore = create<BoardStore>()(
                                 createdAt: Date.now(),
                             };
                         });
+                        
+                        // Record in collection
+                        useCollectionStore.getState().recordItemCreation(itemDefId);
+                        
                         return true;
                     }
                 }
@@ -140,6 +145,9 @@ export const useBoardStore = create<BoardStore>()(
                 };
                 draft.cells[rowB][colB].item = null;
             });
+            
+            // Record the merged item in collection
+            useCollectionStore.getState().recordItemCreation(itemA.mergesInto!);
 
             return true;
         },
