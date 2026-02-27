@@ -1,25 +1,25 @@
 export function CharacterDetailPanel() {
-    // Character items data - placeholders matching UI.png design
-    // TODO: Connect to game state store when character inventory system is implemented
-    const characterItems = [
-        { avatar: '🦊', multiplier: null, items: ['🎂', '🍊', '🍔'] },
-        { avatar: '👧', multiplier: 2, items: ['🍪', '🍰'] },
-        { avatar: '🐻', multiplier: null, items: [] },
-        { avatar: '🎭', multiplier: 3, items: ['🍱', '🧁', '🍕'] },
+    // Character activity data - matching activity_UI.jpg design
+    // TODO: Connect to game state store when character activity system is implemented
+    const characterActivities = [
+        { avatar: '🦊', progress: '10/12', timeLabel: null },
+        { avatar: '👧', progress: null, timeLabel: '2天20时' },
+        { avatar: '🐻', progress: null, timeLabel: null },
+        { avatar: '🎭', progress: null, timeLabel: '2天13时' },
     ];
 
     return (
         <div style={{
-            width: '140px',
+            width: '120px',
             display: 'flex',
             flexDirection: 'column',
             gap: '12px',
-            padding: '16px 12px',
+            padding: '12px 8px',
             background: 'rgba(255, 255, 255, 0.7)',
             borderRadius: '12px',
             alignSelf: 'flex-start',
         }}>
-            {characterItems.map((char, idx) => (
+            {characterActivities.map((activity, idx) => (
                 <div
                     key={idx}
                     style={{
@@ -27,93 +27,48 @@ export function CharacterDetailPanel() {
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
-                        gap: '8px',
+                        gap: '6px',
                         padding: '12px 8px',
                         background: 'rgba(255, 255, 255, 0.9)',
                         borderRadius: '12px',
                         boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                        minHeight: '100px',
+                        minHeight: '80px',
                     }}
                 >
-                    {/* Multiplier badge (top-right) */}
-                    {char.multiplier && (
-                        <div style={{
-                            position: 'absolute',
-                            top: '-8px',
-                            right: '-8px',
-                            background: '#ff4444',
-                            color: 'white',
-                            borderRadius: '50%',
-                            width: '28px',
-                            height: '28px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            fontSize: '12px',
-                            fontWeight: 'bold',
-                            border: '2px solid white',
-                            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
-                        }}>
-                            x{char.multiplier}
-                        </div>
-                    )}
-
                     {/* Character avatar */}
                     <div style={{
-                        fontSize: '36px',
-                        marginBottom: '4px',
+                        fontSize: '40px',
+                        marginBottom: '2px',
                     }}>
-                        {char.avatar}
+                        {activity.avatar}
                     </div>
 
-                    {/* Items grid */}
-                    {char.items.length > 0 && (
+                    {/* Progress indicator */}
+                    {activity.progress && (
                         <div style={{
-                            display: 'grid',
-                            gridTemplateColumns: 'repeat(2, 1fr)',
-                            gap: '6px',
-                            width: '100%',
+                            fontSize: '11px',
+                            fontWeight: 'bold',
+                            color: '#333',
+                            background: 'rgba(255, 200, 100, 0.3)',
+                            padding: '2px 8px',
+                            borderRadius: '8px',
                         }}>
-                            {char.items.map((item, itemIdx) => (
-                                <div
-                                    key={itemIdx}
-                                    style={{
-                                        background: 'linear-gradient(135deg, #ffecd2, #fcb69f)',
-                                        borderRadius: '8px',
-                                        padding: '10px',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        fontSize: '28px',
-                                        aspectRatio: '1',
-                                    }}
-                                >
-                                    {item}
-                                </div>
-                            ))}
+                            {activity.progress}
                         </div>
                     )}
 
-                    {/* Item count badge at bottom-right if more than 2 items */}
-                    {char.items.length > 2 && (
+                    {/* Time label */}
+                    {activity.timeLabel && (
                         <div style={{
-                            position: 'absolute',
-                            bottom: '-6px',
-                            right: '-6px',
-                            background: '#333',
-                            color: 'white',
-                            borderRadius: '50%',
-                            width: '26px',
-                            height: '26px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            fontSize: '12px',
+                            fontSize: '11px',
                             fontWeight: 'bold',
-                            border: '2px solid white',
-                            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
+                            color: '#666',
+                            background: 'rgba(255, 255, 255, 0.9)',
+                            padding: '2px 8px',
+                            borderRadius: '8px',
+                            whiteSpace: 'nowrap',
                         }}>
-                            x{char.items.length}
+                            {activity.timeLabel}
                         </div>
                     )}
                 </div>
