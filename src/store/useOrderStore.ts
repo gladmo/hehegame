@@ -5,6 +5,7 @@ import type { Order, OrderDifficulty, OrderRequirement } from '@/shared/types';
 import { MAX_ACTIVE_ORDERS, ORDER_BASE_TIME_MS } from '@/shared/constants';
 import { getUnlockedChains, CHAINS } from '@/data/items';
 import { CUSTOMER_NAMES } from '@/data/orders';
+import { useCollectionStore } from './useCollectionStore';
 
 interface OrderStore {
     orders: Order[];
@@ -99,6 +100,9 @@ export const useOrderStore = create<OrderStore>()(
                     draftOrder.fulfilled[itemDefId] = (draftOrder.fulfilled[itemDefId] || 0) + 1;
                 }
             });
+            
+            // Record item usage in collection
+            useCollectionStore.getState().recordItemUsage(itemDefId);
 
             return true;
         },
