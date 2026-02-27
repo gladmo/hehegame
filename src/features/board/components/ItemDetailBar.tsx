@@ -1,13 +1,16 @@
-import { useState } from 'react';
-
 export function ItemDetailBar() {
     // Placeholder data matching activity_UI.jpg design
     // TODO: Connect to selected item from board state
-    const [selectedItem] = useState({
+    const selectedItem = {
         name: '日铸雪芽茶',
         level: 4,
         description: '合成相同棋子，进行升级。',
-    });
+    };
+
+    const handleDelete = () => {
+        // TODO: Implement item deletion when board item selection is implemented
+        console.log('Delete item:', selectedItem.name);
+    };
 
     return (
         <div style={{
@@ -81,7 +84,9 @@ export function ItemDetailBar() {
                 </div>
 
                 {/* Delete Button */}
-                <button style={{
+                <button 
+                onClick={handleDelete}
+                style={{
                     width: '48px',
                     height: '48px',
                     background: '#ff6b6b',

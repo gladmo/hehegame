@@ -1,5 +1,6 @@
 import { usePlayerStore } from '@/store/usePlayerStore';
 import { useEconomyStore } from '@/store/useEconomyStore';
+import { useState, useEffect } from 'react';
 
 interface ActivityCard {
     avatar: string;
@@ -9,7 +10,23 @@ interface ActivityCard {
 }
 
 export function RenovationScreen() {
+    const playerLevel = usePlayerStore(state => state.level);
     const coins = useEconomyStore(state => state.coins);
+    const stamina = useEconomyStore(state => state.stamina);
+    const [timer, setTimer] = useState('00:00:00');
+
+    // Timer effect for stamina display
+    useEffect(() => {
+        const startTime = Date.now();
+        const interval = setInterval(() => {
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const hours = Math.floor(elapsed / 3600);
+            const minutes = Math.floor((elapsed % 3600) / 60);
+            const seconds = elapsed % 60;
+            setTimer(`${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`);
+        }, 1000);
+        return () => clearInterval(interval);
+    }, []);
     
     // Activity cards positioned around the isometric view - matching main_UI.jpg
     const activities: ActivityCard[] = [
@@ -70,7 +87,7 @@ export function RenovationScreen() {
                         color: 'white',
                         boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
                     }}>
-                        18
+                        {playerLevel}
                     </div>
 
                     {/* Stamina with timer */}
@@ -84,9 +101,9 @@ export function RenovationScreen() {
                         color: 'white',
                     }}>
                         <span style={{ fontSize: '18px' }}>⚡</span>
-                        <span style={{ fontWeight: 'bold' }}>49</span>
+                        <span style={{ fontWeight: 'bold' }}>{stamina}</span>
                         <span style={{ fontSize: '14px' }}>➕</span>
-                        <span style={{ fontSize: '11px' }}>00:01:31</span>
+                        <span style={{ fontSize: '11px' }}>{timer}</span>
                     </div>
 
                     {/* Coins */}
@@ -103,7 +120,7 @@ export function RenovationScreen() {
                         <span style={{ fontWeight: 'bold' }}>{coins}</span>
                     </div>
 
-                    {/* Hearts */}
+                    {/* Hearts - placeholder */}
                     <div style={{
                         display: 'flex',
                         alignItems: 'center',
@@ -190,7 +207,7 @@ export function RenovationScreen() {
                         餐厅装修区域
                     </div>
 
-                    {/* Coin counter popup in center */}
+                    {/* Coin counter popup in center - placeholder values */}
                     <div style={{
                         marginTop: '32px',
                         background: 'rgba(255, 255, 255, 0.95)',
@@ -208,7 +225,7 @@ export function RenovationScreen() {
                             fontWeight: 'bold',
                             color: '#333',
                         }}>
-                            101/144
+                            {coins}/144
                         </div>
                     </div>
 
