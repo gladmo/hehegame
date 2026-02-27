@@ -87,7 +87,7 @@ export function GameScreen() {
                     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
                     textAlign: 'center',
                 }}>
-                    点击跟子可在此处<br />阅读其详细信息
+                    点击棋子可在此处<br />阅读其详细信息
                 </button>
 
                 {/* Right icon */}

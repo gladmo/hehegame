@@ -114,7 +114,7 @@ export function HUD() {
                     <span style={{ fontWeight: 'bold' }}>{gems}</span>
                 </div>
 
-                {/* Battery/Energy indicator */}
+                {/* Battery/Energy indicator - placeholder matching UI.png */}
                 <div style={{
                     display: 'flex',
                     alignItems: 'center',
@@ -129,7 +129,7 @@ export function HUD() {
                     <span style={{ opacity: 0.7 }}>/2137</span>
                 </div>
 
-                {/* Hearts */}
+                {/* Hearts - placeholder matching UI.png */}
                 <div style={{
                     display: 'flex',
                     alignItems: 'center',
@@ -141,7 +141,7 @@ export function HUD() {
                 </div>
             </div>
 
-            {/* Menu buttons */}
+            {/* Menu buttons - placeholders matching UI.png */}
             <div style={{
                 display: 'flex',
                 gap: '12px',

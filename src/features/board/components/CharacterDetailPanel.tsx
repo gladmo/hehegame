@@ -1,5 +1,6 @@
 export function CharacterDetailPanel() {
-    // Mock character items data - matching the target UI more closely
+    // Character items data - placeholders matching UI.png design
+    // TODO: Connect to game state store when character inventory system is implemented
     const characterItems = [
         { avatar: '🦊', multiplier: null, items: ['🎂', '🍊', '🍔'] },
         { avatar: '👧', multiplier: 2, items: ['🍪', '🍰'] },

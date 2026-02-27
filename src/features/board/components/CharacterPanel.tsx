@@ -1,5 +1,3 @@
-import { useOrderStore } from '@/store/useOrderStore';
-
 interface CharacterCardProps {
     avatar: string;
     name: string;
@@ -131,7 +129,8 @@ function CharacterCard({ avatar, name, health, maxHealth, multiplier, badge, col
 }
 
 export function CharacterPanel() {
-    // Mock character data - in real implementation, this would come from store
+    // Character data - placeholders matching UI.png design
+    // TODO: Connect to game state store when character system is implemented
     const characters = [
         { avatar: '🐱', name: '小猫猫', health: 35, maxHealth: 80, color: 'linear-gradient(135deg, #a8e6cf, #6bc9a8)' },
         { avatar: '🤖', name: 'JND2247', health: 35, maxHealth: 80, color: 'linear-gradient(135deg, #85c1e9, #5dade2)' },
