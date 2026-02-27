@@ -100,13 +100,27 @@ export const useBoardStore = create<BoardStore>()(
 
         moveItem: (fromRow, fromCol, toRow, toCol) => {
             const state = get();
-            const fromCell = state.cells[fromRow]?.[fromCol];
-            const toCell = state.cells[toRow]?.[toCol];
+            
+            // Early validation: Check bounds
+            if (fromRow < 0 || fromRow >= BOARD_ROWS || fromCol < 0 || fromCol >= BOARD_COLS ||
+                toRow < 0 || toRow >= BOARD_ROWS || toCol < 0 || toCol >= BOARD_COLS) {
+                return false;
+            }
+            
+            // Prevent moving to same cell
+            if (fromRow === toRow && fromCol === toCol) {
+                return false;
+            }
+            
+            const fromCell = state.cells[fromRow][fromCol];
+            const toCell = state.cells[toRow][toCol];
 
-            if (!fromCell || !toCell || !fromCell.item) {
+            // Early return if no item to move
+            if (!fromCell?.item) {
                 return false;
             }
 
+            // Early return if target is not valid
             if (toCell.type !== 'normal' || toCell.item) {
                 return false;
             }
@@ -121,38 +135,52 @@ export const useBoardStore = create<BoardStore>()(
 
         mergeItems: (rowA, colA, rowB, colB) => {
             const state = get();
-            const cellA = state.cells[rowA]?.[colA];
-            const cellB = state.cells[rowB]?.[colB];
-
-            if (!cellA?.item || !cellB?.item) {
+            
+            // Early validation: Check bounds
+            if (rowA < 0 || rowA >= BOARD_ROWS || colA < 0 || colA >= BOARD_COLS ||
+                rowB < 0 || rowB >= BOARD_ROWS || colB < 0 || colB >= BOARD_COLS) {
                 return false;
             }
-
+            
             // Prevent merging with itself
             if (rowA === rowB && colA === colB) {
                 return false;
             }
+            
+            const cellA = state.cells[rowA][colA];
+            const cellB = state.cells[rowB][colB];
 
-            const itemA = ITEM_MAP[cellA.item.definitionId];
-            const itemB = ITEM_MAP[cellB.item.definitionId];
-
-            // Check if items can merge (same definition and has mergesInto)
-            if (itemA.id !== itemB.id || !itemA.mergesInto) {
+            // Early return if no items
+            if (!cellA?.item || !cellB?.item) {
                 return false;
             }
+
+            // Early return if items are different
+            if (cellA.item.definitionId !== cellB.item.definitionId) {
+                return false;
+            }
+
+            const itemDef = ITEM_MAP[cellA.item.definitionId];
+
+            // Check if items can merge (must have mergesInto)
+            if (!itemDef?.mergesInto) {
+                return false;
+            }
+
+            const mergedItemId = itemDef.mergesInto;
 
             // Merge into cellB position (target cell)
             set((draft) => {
                 draft.cells[rowB][colB].item = {
                     instanceId: nanoid(),
-                    definitionId: itemA.mergesInto!,
+                    definitionId: mergedItemId,
                     createdAt: Date.now(),
                 };
                 draft.cells[rowA][colA].item = null;
             });
             
             // Record the merged item in collection
-            useCollectionStore.getState().recordItemCreation(itemA.mergesInto!);
+            useCollectionStore.getState().recordItemCreation(mergedItemId);
 
             return true;
         },
