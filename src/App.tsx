@@ -1,15 +1,20 @@
 import { useEffect } from 'react';
-import { BoardGrid } from './features/board/components/BoardGrid';
-import { HUD } from './features/board/components/HUD';
-import { OrderPanel } from './features/board/components/OrderPanel';
 import { useEconomyStore } from './store/useEconomyStore';
 import { useOrderStore } from './store/useOrderStore';
 import { usePlayerStore } from './store/usePlayerStore';
+import { useMetaStore } from './store/useMetaStore';
+import { BottomNav } from './shared/components/BottomNav';
+import { GameScreen } from './features/board/GameScreen';
+import { RenovationScreen } from './features/renovation/components/RenovationScreen';
+import { CollectionScreen } from './features/collection/CollectionScreen';
+import { BattlePassScreen } from './features/battlepass/BattlePassScreen';
+import { ShopScreen } from './features/shop/ShopScreen';
 
 function App() {
     const tickStaminaRegen = useEconomyStore(state => state.tickStaminaRegen);
     const refreshOrders = useOrderStore(state => state.refreshOrders);
     const playerLevel = usePlayerStore(state => state.level);
+    const currentScreen = useMetaStore(state => state.currentScreen);
 
     // Stamina regen ticker
     useEffect(() => {
@@ -24,6 +29,23 @@ function App() {
         refreshOrders(playerLevel);
     }, [playerLevel, refreshOrders]);
 
+    const renderScreen = () => {
+        switch (currentScreen) {
+            case 'game':
+                return <GameScreen />;
+            case 'renovation':
+                return <RenovationScreen />;
+            case 'collection':
+                return <CollectionScreen />;
+            case 'battlepass':
+                return <BattlePassScreen />;
+            case 'shop':
+                return <ShopScreen />;
+            default:
+                return <GameScreen />;
+        }
+    };
+
     return (
         <div style={{
             width: '100%',
@@ -33,17 +55,10 @@ function App() {
             background: 'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)',
             overflow: 'hidden',
         }}>
-            <HUD />
-            <div style={{
-                flex: 1,
-                display: 'flex',
-                gap: '16px',
-                padding: '16px',
-                overflow: 'hidden',
-            }}>
-                <BoardGrid />
-                <OrderPanel />
+            <div style={{ flex: 1, overflow: 'hidden' }}>
+                {renderScreen()}
             </div>
+            <BottomNav />
         </div>
     );
 }
