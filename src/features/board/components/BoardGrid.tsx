@@ -10,9 +10,10 @@ interface DragState {
     isDragging: boolean;
     sourceRow: number;
     sourceCol: number;
-    ghostX: number;
-    ghostY: number;
     itemDefId: string;
+    targetRow: number | null;
+    targetCol: number | null;
+    canMerge: boolean;
 }
 
 export function BoardGrid() {
@@ -24,6 +25,7 @@ export function BoardGrid() {
     
     const [dragState, setDragState] = useState<DragState | null>(null);
     const boardRef = useRef<HTMLDivElement>(null);
+    const ghostRef = useRef<HTMLDivElement>(null);
 
     const handlePointerDown = useCallback((e: React.PointerEvent, row: number, col: number) => {
         const cell = cells[row][col];
@@ -34,9 +36,10 @@ export function BoardGrid() {
                 isDragging: true,
                 sourceRow: row,
                 sourceCol: col,
-                ghostX: e.clientX,
-                ghostY: e.clientY,
                 itemDefId: cell.item.definitionId,
+                targetRow: null,
+                targetCol: null,
+                canMerge: false,
             });
             e.currentTarget.setPointerCapture(e.pointerId);
         } else if (cell.type === 'launcher' && cell.launcherId) {
@@ -50,14 +53,59 @@ export function BoardGrid() {
     }, [cells, spawnItem, spendStamina]);
 
     const handlePointerMove = useCallback((e: React.PointerEvent) => {
-        if (dragState?.isDragging) {
-            setDragState(prev => prev ? {
-                ...prev,
-                ghostX: e.clientX,
-                ghostY: e.clientY,
-            } : null);
+        if (dragState?.isDragging && boardRef.current) {
+            // Update ghost position directly via ref for performance
+            if (ghostRef.current) {
+                ghostRef.current.style.left = `${e.clientX - CELL_SIZE / 2}px`;
+                ghostRef.current.style.top = `${e.clientY - CELL_SIZE / 2}px`;
+            }
+
+            // Calculate target cell for visual feedback
+            const rect = boardRef.current.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const targetCol = Math.floor(x / CELL_SIZE);
+            const targetRow = Math.floor(y / CELL_SIZE);
+
+            // Check if target is valid and update state only if changed
+            if (targetRow >= 0 && targetRow < cells.length &&
+                targetCol >= 0 && targetCol < cells[0].length) {
+                
+                const targetCell = cells[targetRow][targetCol];
+                const sourceCell = cells[dragState.sourceRow][dragState.sourceCol];
+                
+                // Determine if merge is possible
+                const canMerge = !!(
+                    targetCell.item && 
+                    sourceCell.item &&
+                    targetCell.item.definitionId === sourceCell.item.definitionId &&
+                    ITEM_MAP[targetCell.item.definitionId]?.mergesInto
+                );
+
+                // Only update state if target changed or canMerge status changed
+                if (targetRow !== dragState.targetRow || 
+                    targetCol !== dragState.targetCol || 
+                    canMerge !== dragState.canMerge) {
+                    setDragState(prev => prev ? {
+                        ...prev,
+                        targetRow,
+                        targetCol,
+                        canMerge,
+                    } : null);
+                }
+            } else {
+                // Dragging outside board - clear target
+                if (dragState.targetRow !== null || dragState.targetCol !== null) {
+                    setDragState(prev => prev ? {
+                        ...prev,
+                        targetRow: null,
+                        targetCol: null,
+                        canMerge: false,
+                    } : null);
+                }
+            }
         }
-    }, [dragState]);
+    }, [dragState, cells]);
 
     const handlePointerUp = useCallback((e: React.PointerEvent) => {
         if (!dragState?.isDragging || !boardRef.current) {
@@ -77,6 +125,12 @@ export function BoardGrid() {
             
             const targetCell = cells[targetRow][targetCol];
             const sourceCell = cells[dragState.sourceRow][dragState.sourceCol];
+
+            // Prevent dropping on the same cell
+            if (targetRow === dragState.sourceRow && targetCol === dragState.sourceCol) {
+                setDragState(null);
+                return;
+            }
 
             // Try to merge if target has same item
             if (targetCell.item && sourceCell.item &&
@@ -110,29 +164,41 @@ export function BoardGrid() {
                 }}
             >
                 {cells.map((row) =>
-                    row.map((cell) => (
-                        <Cell
-                            key={`${cell.row}-${cell.col}`}
-                            cell={cell}
-                            onPointerDown={handlePointerDown}
-                            isDraggingFrom={dragState?.sourceRow === cell.row && dragState?.sourceCol === cell.col}
-                        />
-                    ))
+                    row.map((cell) => {
+                        const isTarget = dragState?.targetRow === cell.row && dragState?.targetCol === cell.col;
+                        const canDrop = isTarget && (
+                            dragState.canMerge || 
+                            (!cell.item && cell.type === 'normal')
+                        );
+                        
+                        return (
+                            <Cell
+                                key={`${cell.row}-${cell.col}`}
+                                cell={cell}
+                                onPointerDown={handlePointerDown}
+                                isDraggingFrom={dragState?.sourceRow === cell.row && dragState?.sourceCol === cell.col}
+                                isDropTarget={canDrop}
+                            />
+                        );
+                    })
                 )}
             </div>
             
             {/* Drag ghost */}
             {dragState?.isDragging && (
                 <div
+                    ref={ghostRef}
                     style={{
                         position: 'fixed',
-                        left: dragState.ghostX - CELL_SIZE / 2,
-                        top: dragState.ghostY - CELL_SIZE / 2,
+                        left: 0,
+                        top: 0,
                         width: CELL_SIZE,
                         height: CELL_SIZE,
                         pointerEvents: 'none',
-                        opacity: 0.7,
+                        opacity: 0.8,
                         zIndex: 1000,
+                        transform: 'scale(1.1)',
+                        filter: dragState.canMerge ? 'drop-shadow(0 0 8px #4ade80)' : 'none',
                     }}
                 >
                     <ItemSprite itemDefId={dragState.itemDefId} />
