@@ -24,6 +24,11 @@ Visit http://localhost:3000 to play the game.
 npm run build
 ```
 
+### Deploy to GitHub Pages
+The project is configured to automatically deploy to GitHub Pages when changes are pushed to the `main` branch. The site will be available at `https://gladmo.github.io/hehegame/`.
+
+To manually trigger a deployment, go to the Actions tab on GitHub and run the "Deploy to GitHub Pages" workflow.
+
 ## How to Play
 
 1. **Spawn Items**: Click on the launcher icons (🧺 🍵 📦) at the top of the board to spawn items. Each spawn costs stamina (❤️).
