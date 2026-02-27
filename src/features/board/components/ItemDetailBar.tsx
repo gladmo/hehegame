@@ -9,7 +9,6 @@ export function ItemDetailBar() {
 
     const handleDelete = () => {
         // TODO: Implement item deletion when board item selection is implemented
-        console.log('Delete item:', selectedItem.name);
     };
 
     return (
