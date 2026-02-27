@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import { motion } from 'framer-motion';
 import type { BoardCell } from '@/shared/types';
 import { ITEM_MAP } from '@/data/items';
 import { LAUNCHER_MAP } from '@/data/launchers';
@@ -59,10 +60,17 @@ export const Cell = memo(function Cell({ cell, onPointerDown, isDraggingFrom }: 
         if (cell.item) {
             const itemDef = ITEM_MAP[cell.item.definitionId];
             return (
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <motion.div
+                    key={cell.item.instanceId}
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    exit={{ scale: 0 }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                    style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+                >
                     <div>{itemDef?.emoji || '❓'}</div>
                     <div style={{ fontSize: '8px', marginTop: '-4px' }}>T{itemDef?.tier}</div>
-                </div>
+                </motion.div>
             );
         }
 

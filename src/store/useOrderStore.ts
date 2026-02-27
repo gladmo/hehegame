@@ -3,7 +3,7 @@ import { immer } from 'zustand/middleware/immer';
 import { nanoid } from 'nanoid';
 import type { Order, OrderDifficulty, OrderRequirement } from '@/shared/types';
 import { MAX_ACTIVE_ORDERS, ORDER_BASE_TIME_MS } from '@/shared/constants';
-import { getUnlockedChains } from '@/data/items';
+import { getUnlockedChains, CHAINS } from '@/data/items';
 import { CUSTOMER_NAMES } from '@/data/orders';
 
 interface OrderStore {
@@ -17,7 +17,7 @@ interface OrderStore {
 }
 
 function generateRandomOrder(playerLevel: number, difficulty: OrderDifficulty): Order {
-    const chains = getUnlockedChains(playerLevel);
+    const unlockedChainNames = getUnlockedChains(playerLevel);
     const numRequirements = difficulty === 'easy' ? 1 : difficulty === 'medium' ? 2 : 3;
     
     const requirements: OrderRequirement[] = [];
@@ -26,13 +26,17 @@ function generateRandomOrder(playerLevel: number, difficulty: OrderDifficulty): 
         const quantity = Math.floor(Math.random() * 2) + 1;
         
         // Pick a random chain and tier-appropriate item
-        const chain = chains[Math.floor(Math.random() * chains.length)];
-        const itemId = `${chain}_tier${tier}`;
+        const chainName = unlockedChainNames[Math.floor(Math.random() * unlockedChainNames.length)];
+        const chainItems = CHAINS[chainName] || [];
+        const itemsInTier = chainItems.filter(item => item.tier <= tier);
         
-        requirements.push({
-            itemDefinitionId: itemId,
-            quantity,
-        });
+        if (itemsInTier.length > 0) {
+            const item = itemsInTier[Math.floor(Math.random() * itemsInTier.length)];
+            requirements.push({
+                itemDefinitionId: item.id,
+                quantity,
+            });
+        }
     }
     
     const timeMult = difficulty === 'easy' ? 1.5 : difficulty === 'medium' ? 1.2 : 1;
