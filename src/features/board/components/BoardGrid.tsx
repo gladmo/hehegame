@@ -18,7 +18,8 @@ const BoardGrid: React.FC = () => {
 
   const isDragging = drag.fromIdx !== null
   const gridRef = useRef<HTMLDivElement>(null)
-  const pointerDownRef = useRef<{ idx: number }>({ idx: -1 })
+  // Track whether the pointer has moved (to distinguish tap from drag)
+  const pointerMovedRef = useRef(false)
 
   const handlePointerDown = useCallback((e: React.PointerEvent, idx: number) => {
     const item = cells[idx]?.item
@@ -26,57 +27,59 @@ const BoardGrid: React.FC = () => {
       selectCell(idx)
       return
     }
+    // Capture pointer so we continue receiving pointermove/pointerup even when
+    // the finger/cursor moves over other elements (critical for mobile).
     e.currentTarget.setPointerCapture(e.pointerId)
-    pointerDownRef.current = { idx }
+    pointerMovedRef.current = false
     startDrag(idx)
   }, [cells, startDrag, selectCell])
 
-  const handlePointerEnter = useCallback((idx: number) => {
+  // Grid-level pointermove: use elementFromPoint to find the cell under the
+  // pointer. This works on both desktop and mobile (touch), because pointer
+  // events bubble up from the capturing element to the grid even when a cell
+  // has pointer capture, and elementFromPoint ignores capture for hit testing.
+  const handleGridPointerMove = useCallback((e: React.PointerEvent) => {
     if (!isDragging) return
-    moveDrag(idx)
+    pointerMovedRef.current = true
+    const el = document.elementFromPoint(e.clientX, e.clientY)
+    const cellEl = el?.closest('[data-cell-idx]') as HTMLElement | null
+    if (cellEl) {
+      const idx = parseInt(cellEl.dataset.cellIdx ?? '-1', 10)
+      moveDrag(idx)
+    } else {
+      moveDrag(-1) // pointer outside all cells → clear drop target
+    }
   }, [isDragging, moveDrag])
 
-  const handlePointerUp = useCallback((idx: number) => {
-    if (!isDragging) {
-      selectCell(idx)
-      return
-    }
-    const { fromIdx } = drag
-    if (fromIdx === idx) {
-      // Tap (no move) = click generator or select
+  // Grid-level pointerup: handles both taps (no movement) and drag drops.
+  const handleGridPointerUp = useCallback(() => {
+    if (!isDragging) return
+    const fromIdx = drag.fromIdx
+    if (fromIdx === null) return
+
+    if (!pointerMovedRef.current) {
+      // Tap with no movement → generator click or cell select
       cancelDrag()
-      const item = cells[idx]?.item
+      const item = cells[fromIdx]?.item
       if (item && !item.isLocked) {
         const def = ITEM_MAP[item.itemId]
         if (def?.isGenerator) {
           const ok = spendEnergy(1)
-          if (ok) clickGenerator(idx)
+          if (ok) clickGenerator(fromIdx)
           return
         }
       }
-      selectCell(idx)
+      selectCell(fromIdx)
       return
     }
+
     endDrag()
   }, [isDragging, drag, cells, cancelDrag, endDrag, selectCell, clickGenerator, spendEnergy])
-
-  // Global pointer up (in case pointer leaves grid)
-  const handleGridPointerLeave = useCallback(() => {
-    if (isDragging) {
-      moveDrag(-1) // clear target
-    }
-  }, [isDragging, moveDrag])
-
-  const handleGridPointerUp = useCallback(() => {
-    if (isDragging) {
-      endDrag()
-    }
-  }, [isDragging, endDrag])
 
   return (
     <div
       ref={gridRef}
-      onPointerLeave={handleGridPointerLeave}
+      onPointerMove={handleGridPointerMove}
       onPointerUp={handleGridPointerUp}
       style={{
         display: 'grid',
@@ -104,8 +107,6 @@ const BoardGrid: React.FC = () => {
           canMerge={drag.targetIdx === idx && drag.canMerge}
           canUnlockTarget={drag.targetIdx === idx && drag.canUnlockTarget}
           onPointerDown={(e) => handlePointerDown(e, idx)}
-          onPointerEnter={() => handlePointerEnter(idx)}
-          onPointerUp={() => handlePointerUp(idx)}
         />
       ))}
     </div>

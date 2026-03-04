@@ -12,11 +12,10 @@ interface CellProps {
   canMerge: boolean
   canUnlockTarget: boolean
   onPointerDown: (e: React.PointerEvent) => void
-  onPointerEnter: () => void
-  onPointerUp: () => void
 }
 
 const Cell: React.FC<CellProps> = memo(({
+  idx,
   item,
   isSelected,
   isDraggingFrom,
@@ -24,8 +23,6 @@ const Cell: React.FC<CellProps> = memo(({
   canMerge,
   canUnlockTarget,
   onPointerDown,
-  onPointerEnter,
-  onPointerUp,
 }) => {
   const def = item ? ITEM_MAP[item.itemId] : null
 
@@ -38,6 +35,7 @@ const Cell: React.FC<CellProps> = memo(({
 
   return (
     <div
+      data-cell-idx={idx}
       style={{
         border: `1.5px solid ${borderColor}`,
         borderRadius: 8,
@@ -54,8 +52,6 @@ const Cell: React.FC<CellProps> = memo(({
         aspectRatio: '1',
       }}
       onPointerDown={onPointerDown}
-      onPointerEnter={onPointerEnter}
-      onPointerUp={onPointerUp}
     >
       {item && def && (
         <motion.div

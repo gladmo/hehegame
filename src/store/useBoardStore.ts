@@ -136,7 +136,8 @@ export const useBoardStore = create<BoardState & BoardActions>()(
     moveDrag: (targetIdx) => {
       const { cells, drag } = get()
       if (drag.fromIdx === null) return
-      if (drag.fromIdx === targetIdx) {
+      if (targetIdx < 0 || drag.fromIdx === targetIdx) {
+        if (drag.targetIdx === null && !drag.canMerge && !drag.canUnlockTarget) return
         set(state => { state.drag.targetIdx = null; state.drag.canMerge = false; state.drag.canUnlockTarget = false })
         return
       }
