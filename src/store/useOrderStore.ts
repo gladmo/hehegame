@@ -1,11 +1,11 @@
 import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
+import { persist } from 'zustand/middleware'
 import { OrderTemplate, ORDER_TEMPLATES, pickRandomOrders } from '@/data/orders'
 
 export interface ActiveOrder {
   instanceId: string
   template: OrderTemplate
-  expiresAt: number  // timestamp ms
   fulfilled: boolean
 }
 
@@ -18,71 +18,70 @@ interface OrderActions {
   refreshOrders: () => void
   /** Check if an order can be fulfilled with the given board item IDs */
   canFulfill: (orderId: string, boardItemIds: string[]) => boolean
-  removeExpiredOrders: () => void
 }
 
-let _orderCounter = 0
+let _orderCounter = Date.now() * 1000
 
 function createActiveOrder(template: OrderTemplate): ActiveOrder {
   return {
     instanceId: `order_${++_orderCounter}`,
     template,
-    expiresAt: Date.now() + template.timeLimit * 1000,
     fulfilled: false,
   }
 }
 
 export const useOrderStore = create<OrderState & OrderActions>()(
-  immer((set, get) => ({
-    activeOrders: [],
+  persist(
+    immer((set, get) => ({
+      activeOrders: [],
 
-    initOrders: () => {
-      const tutorialTemplate = ORDER_TEMPLATES.find(t => t.id === 'order_tutorial')
-      const excludeIds = tutorialTemplate ? ['order_tutorial'] : []
-      const count = tutorialTemplate ? 2 : 3
-      const others = pickRandomOrders(count, excludeIds)
-      const initial = tutorialTemplate
-        ? [createActiveOrder(tutorialTemplate), ...others.map(createActiveOrder)]
-        : others.map(createActiveOrder)
-      set(state => { state.activeOrders = initial })
-    },
+      initOrders: () => {
+        // Skip if already initialized from persistence
+        if (get().activeOrders.length > 0) return
+        const tutorialTemplate = ORDER_TEMPLATES.find(t => t.id === 'order_tutorial')
+        const excludeIds = tutorialTemplate ? ['order_tutorial'] : []
+        const count = tutorialTemplate ? 2 : 3
+        const others = pickRandomOrders(count, excludeIds)
+        const initial = tutorialTemplate
+          ? [createActiveOrder(tutorialTemplate), ...others.map(createActiveOrder)]
+          : others.map(createActiveOrder)
+        set(state => { state.activeOrders = initial })
+      },
 
-    refreshOrders: () => {
-      const { activeOrders } = get()
-      const currentIds = activeOrders.map(o => o.template.id)
-      const newTemplates = pickRandomOrders(3, currentIds)
-      set(state => {
-        state.activeOrders = [...state.activeOrders, ...newTemplates.map(createActiveOrder)]
-      })
-    },
+      refreshOrders: () => {
+        const { activeOrders } = get()
+        const currentIds = activeOrders.map(o => o.template.id)
+        const newTemplates = pickRandomOrders(3, currentIds)
+        set(state => {
+          state.activeOrders = [...state.activeOrders, ...newTemplates.map(createActiveOrder)]
+        })
+      },
 
-    canFulfill: (orderId, boardItemIds) => {
-      const { activeOrders } = get()
-      const order = activeOrders.find(o => o.instanceId === orderId)
-      if (!order || order.fulfilled) return false
+      canFulfill: (orderId, boardItemIds) => {
+        const { activeOrders } = get()
+        const order = activeOrders.find(o => o.instanceId === orderId)
+        if (!order || order.fulfilled) return false
 
-      // For each requirement, check we have enough matching items
-      const available = [...boardItemIds]
-      for (const req of order.template.requirements) {
-        let found = 0
-        for (let i = available.length - 1; i >= 0; i--) {
-          if (available[i] === req.itemId) {
-            found++
-            if (found === req.count) break
+        // For each requirement, check we have enough matching items
+        const available = [...boardItemIds]
+        for (const req of order.template.requirements) {
+          let found = 0
+          for (let i = available.length - 1; i >= 0; i--) {
+            if (available[i] === req.itemId) {
+              found++
+              if (found === req.count) break
+            }
           }
+          if (found < req.count) return false
         }
-        if (found < req.count) return false
-      }
-      return true
-    },
-
-    removeExpiredOrders: () => {
-      const now = Date.now()
-      set(state => {
-        state.activeOrders = state.activeOrders.filter(o => o.expiresAt > now || o.fulfilled)
-      })
-    },
-  }))
+        return true
+      },
+    })),
+    {
+      name: 'hehegame-orders',
+      partialize: (state) => ({ activeOrders: state.activeOrders }),
+    }
+  )
 )
 
 // Separate function since we need richer board data
@@ -137,7 +136,6 @@ export function fulfillOrderAction(
         state.activeOrders.push({
           instanceId: `order_${++_orderCounter}`,
           template: newTemplates[0],
-          expiresAt: Date.now() + newTemplates[0].timeLimit * 1000,
           fulfilled: false,
         })
       })
