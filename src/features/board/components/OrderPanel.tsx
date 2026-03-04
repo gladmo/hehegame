@@ -26,78 +26,90 @@ const OrderCard: React.FC<{ order: ActiveOrder; onFulfill: () => void; canFulfil
     return `${s}秒`
   }
 
+  const isTutorial = order.template.id === 'order_tutorial'
+
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, x: -20 }}
-      animate={{ opacity: 1, x: 0 }}
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.8 }}
       style={{
         background: canFulfill
           ? 'linear-gradient(135deg, #1a3a1a, #2d5a2d)'
-          : 'linear-gradient(135deg, #1a1a0a, #3a2a0a)',
-        border: `2px solid ${canFulfill ? '#4ade80' : '#8B6914'}`,
+          : isTutorial
+            ? 'linear-gradient(135deg, #2a1a0a, #4a2a0a)'
+            : 'linear-gradient(135deg, #1a1a0a, #3a2a0a)',
+        border: `2px solid ${canFulfill ? '#4ade80' : isTutorial ? '#f0a040' : '#8B6914'}`,
         borderRadius: 10,
-        padding: '8px 10px',
+        padding: '6px 8px',
         display: 'flex',
-        alignItems: 'center',
-        gap: 8,
-        boxShadow: canFulfill ? '0 0 12px rgba(74,222,128,0.3)' : '0 2px 8px rgba(0,0,0,0.3)',
+        flexDirection: 'column',
+        gap: 4,
+        boxShadow: canFulfill
+          ? '0 0 12px rgba(74,222,128,0.3)'
+          : isTutorial
+            ? '0 0 10px rgba(240,160,64,0.3)'
+            : '0 2px 8px rgba(0,0,0,0.3)',
         transition: 'border-color 0.2s, background 0.2s',
         flexShrink: 0,
+        width: 130,
+        minHeight: 0,
+        scrollSnapAlign: 'start',
       }}
     >
+      {/* Order name */}
+      <div style={{ color: isTutorial ? '#fbbf24' : '#f0c040', fontSize: 11, fontWeight: 'bold', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+        {order.template.name}
+      </div>
+
       {/* Requirements */}
-      <div style={{ flex: 1, display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-        <div style={{ width: '100%', color: '#f0c040', fontSize: 11, fontWeight: 'bold', marginBottom: 2 }}>
-          {order.template.name}
+      <div style={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
+        {order.template.requirements.map(req => {
+          const def = ITEM_MAP[req.itemId]
+          return (
+            <div key={req.itemId} style={{
+              display: 'flex', alignItems: 'center', gap: 2,
+              background: 'rgba(255,255,255,0.1)',
+              borderRadius: 5, padding: '1px 4px',
+              fontSize: 11,
+            }}>
+              <span>{def?.emoji ?? '?'}</span>
+              <span style={{ color: '#fde68a', fontSize: 10 }}>×{req.count}</span>
+            </div>
+          )
+        })}
+      </div>
+
+      {/* Timer + reward row */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 1 }}>
+        <div style={{ color: timeLeft < 300 ? '#f87171' : '#94a3b8', fontSize: 9 }}>
+          ⏱{formatTime(timeLeft)}
         </div>
-        <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
-          {order.template.requirements.map(req => {
-            const def = ITEM_MAP[req.itemId]
-            return (
-              <div key={req.itemId} style={{
-                display: 'flex', alignItems: 'center', gap: 2,
-                background: 'rgba(255,255,255,0.1)',
-                borderRadius: 6, padding: '2px 5px',
-                fontSize: 12,
-              }}>
-                <span>{def?.emoji ?? '?'}</span>
-                <span style={{ color: '#fde68a', fontSize: 10 }}>×{req.count}</span>
-              </div>
-            )
-          })}
-        </div>
-        {/* Timer */}
-        <div style={{ color: timeLeft < 300 ? '#f87171' : '#94a3b8', fontSize: 10, marginTop: 2 }}>
-          ⏱ {formatTime(timeLeft)}
+        <div style={{ color: '#fde68a', fontSize: 10, fontWeight: 'bold' }}>
+          🪙{order.template.coinReward}
         </div>
       </div>
 
-      {/* Reward + Button */}
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-        <div style={{ color: '#fde68a', fontSize: 12, fontWeight: 'bold' }}>
-          🪙{order.template.coinReward}
-        </div>
-        <button
-          onClick={onFulfill}
-          disabled={!canFulfill}
-          style={{
-            padding: '4px 10px',
-            borderRadius: 8,
-            border: 'none',
-            background: canFulfill ? 'linear-gradient(135deg, #4ade80, #16a34a)' : '#374151',
-            color: '#fff',
-            fontSize: 11,
-            fontWeight: 'bold',
-            cursor: canFulfill ? 'pointer' : 'not-allowed',
-            whiteSpace: 'nowrap',
-            boxShadow: canFulfill ? '0 2px 6px rgba(74,222,128,0.4)' : 'none',
-          }}
-        >
-          {canFulfill ? '提交' : '不足'}
-        </button>
-      </div>
+      {/* Submit button */}
+      <button
+        onClick={onFulfill}
+        disabled={!canFulfill}
+        style={{
+          padding: '3px 0',
+          borderRadius: 7,
+          border: 'none',
+          background: canFulfill ? 'linear-gradient(135deg, #4ade80, #16a34a)' : '#374151',
+          color: '#fff',
+          fontSize: 11,
+          fontWeight: 'bold',
+          cursor: canFulfill ? 'pointer' : 'not-allowed',
+          boxShadow: canFulfill ? '0 2px 6px rgba(74,222,128,0.4)' : 'none',
+          width: '100%',
+        }}
+      >
+        {canFulfill ? '提交订单 ✓' : '材料不足'}
+      </button>
     </motion.div>
   )
 }
@@ -114,7 +126,6 @@ const OrderPanel: React.FC = () => {
     .filter(c => c.item && !c.item.isLocked)
     .map(c => ({ instanceId: c.item!.instanceId, itemId: c.item!.itemId }))
 
-  // Check fulfillability based on itemIds
   const checkFulfill = (order: ActiveOrder) => {
     const itemIds = boardItems.map(b => b.itemId)
     return canFulfillFn(order.instanceId, itemIds)
@@ -124,52 +135,57 @@ const OrderPanel: React.FC = () => {
     fulfillOrderAction(order.instanceId, boardItems, removeItem, addCoins)
   }
 
-  const hasNonLocked = boardItems.length > 0
+  const tutorialOrder = activeOrders.find(o => o.template.id === 'order_tutorial')
 
   return (
     <div style={{
-      padding: '8px 8px 4px',
-      background: 'rgba(20,10,0,0.9)',
-      borderTop: '2px solid #8B6914',
+      background: 'rgba(15,8,0,0.95)',
+      borderBottom: '2px solid #8B6914',
+      padding: '6px 8px 4px',
+      flexShrink: 0,
     }}>
-      <div style={{
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        marginBottom: 6,
-      }}>
-        <div style={{ color: '#f0c040', fontSize: 13, fontWeight: 'bold' }}>
-          📜 订单列表
+      {/* Header row */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 5 }}>
+        <div style={{ color: '#f0c040', fontSize: 12, fontWeight: 'bold', flexShrink: 0 }}>
+          📜 订单
         </div>
-        {!hasNonLocked && (
-          <div style={{ color: '#f87171', fontSize: 11 }}>
-            ⚠ 棋盘上没有可用棋子
+        {tutorialOrder && (
+          <div style={{
+            color: '#fbbf24', fontSize: 10,
+            background: 'rgba(251,191,36,0.15)',
+            border: '1px solid rgba(251,191,36,0.4)',
+            borderRadius: 5, padding: '1px 6px',
+            flexShrink: 0,
+          }}>
+            💡 合成棋子后提交新手任务
           </div>
+        )}
+        {activeOrders.length === 0 && (
+          <div style={{ color: '#6b7280', fontSize: 10 }}>暂无订单</div>
         )}
       </div>
 
+      {/* Horizontal scrollable order cards */}
       <div style={{
         display: 'flex',
-        flexDirection: 'column',
+        flexDirection: 'row',
         gap: 6,
-        maxHeight: 280,
-        overflowY: 'auto',
-        overflowX: 'hidden',
+        overflowX: 'auto',
+        overflowY: 'hidden',
+        paddingBottom: 2,
+        scrollSnapType: 'x mandatory',
+        WebkitOverflowScrolling: 'touch',
       }}>
         <AnimatePresence mode="popLayout">
           {activeOrders.map(order => (
             <OrderCard
               key={order.instanceId}
               order={order}
-              canFulfill={hasNonLocked && checkFulfill(order)}
+              canFulfill={checkFulfill(order)}
               onFulfill={() => handleFulfill(order)}
             />
           ))}
         </AnimatePresence>
-
-        {activeOrders.length === 0 && (
-          <div style={{ color: '#6b7280', fontSize: 13, textAlign: 'center', padding: '12px 0' }}>
-            暂无订单
-          </div>
-        )}
       </div>
     </div>
   )

@@ -29,17 +29,20 @@ const GameScreen: React.FC = () => {
     <div style={{
       display: 'flex',
       flexDirection: 'column',
-      height: '100vh',
+      height: '100dvh',
       background: 'linear-gradient(180deg, #1a0f05 0%, #2d1b0e 100%)',
       overflow: 'hidden',
     }}>
+      {/* Order panel - fixed at top, horizontally scrollable */}
+      <OrderPanel />
+
       {/* Top Bar */}
       <TopBar />
 
-      {/* Main board area - takes remaining space */}
+      {/* Main board area - takes remaining space, board never scrolls */}
       <div style={{
         flex: 1,
-        padding: '6px 8px 4px',
+        padding: '4px 6px 2px',
         display: 'flex',
         flexDirection: 'column',
         minHeight: 0,
@@ -49,7 +52,7 @@ const GameScreen: React.FC = () => {
           color: '#c8a46e',
           fontSize: 10,
           textAlign: 'center',
-          marginBottom: 3,
+          marginBottom: 2,
           opacity: 0.8,
           flexShrink: 0,
         }}>
@@ -62,11 +65,6 @@ const GameScreen: React.FC = () => {
 
       {/* Item detail bar (shows when something selected) */}
       <ItemDetailBar />
-
-      {/* Order panel - fixed height */}
-      <div style={{ flexShrink: 0, maxHeight: '38vh', overflowY: 'auto' }}>
-        <OrderPanel />
-      </div>
     </div>
   )
 }
