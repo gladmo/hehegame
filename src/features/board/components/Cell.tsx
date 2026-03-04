@@ -66,7 +66,7 @@ const Cell: React.FC<CellProps> = memo(({
         >
           {/* Emoji (dimmed when locked) */}
           <div style={{
-            fontSize: 'clamp(18px, 4vw, 26px)',
+            fontSize: 'clamp(22px, 5.5vw, 34px)',
             lineHeight: 1,
             opacity: item.isLocked ? 0.45 : 1,
             filter: item.isLocked ? 'grayscale(60%)' : 'none',
