@@ -16,10 +16,6 @@ const OrderCard: React.FC<{ order: ActiveOrder; onFulfill: () => void; canFulfil
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.8 }}
-      onClick={canFulfill ? onFulfill : undefined}
-      onKeyDown={canFulfill ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onFulfill() } } : undefined}
-      role={canFulfill ? 'button' : undefined}
-      tabIndex={canFulfill ? 0 : undefined}
       style={{
         background: canFulfill
           ? 'linear-gradient(135deg, #1a3a1a, #2d5a2d)'
@@ -30,9 +26,9 @@ const OrderCard: React.FC<{ order: ActiveOrder; onFulfill: () => void; canFulfil
         borderRadius: 10,
         padding: '5px 7px',
         display: 'flex',
-        flexDirection: 'column',
+        flexDirection: 'row',
         alignItems: 'center',
-        gap: 3,
+        gap: 6,
         boxShadow: canFulfill
           ? '0 0 12px rgba(74,222,128,0.4)'
           : isTutorial
@@ -41,9 +37,9 @@ const OrderCard: React.FC<{ order: ActiveOrder; onFulfill: () => void; canFulfil
         transition: 'border-color 0.2s, background 0.2s, box-shadow 0.2s',
         flexShrink: 0,
         minWidth: 80,
-        cursor: canFulfill ? 'pointer' : 'default',
         scrollSnapAlign: 'start',
         position: 'relative',
+        overflow: 'hidden',
       }}
     >
       {/* Item icons row */}
@@ -58,25 +54,56 @@ const OrderCard: React.FC<{ order: ActiveOrder; onFulfill: () => void; canFulfil
         })}
       </div>
 
-      {/* Coin reward */}
-      <div style={{ color: '#fde68a', fontSize: 10, fontWeight: 'bold' }}>
-        🪙{order.template.coinReward}
+      {/* Reward tags column on the right */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 3, alignItems: 'flex-start' }}>
+        <span style={{
+          color: '#fde68a',
+          fontSize: 10,
+          fontWeight: 'bold',
+          background: 'rgba(0,0,0,0.35)',
+          borderRadius: 4,
+          padding: '1px 4px',
+        }}>
+          🪙{order.template.coinReward}
+        </span>
+        <span style={{
+          color: '#c4b5fd',
+          fontSize: 10,
+          fontWeight: 'bold',
+          background: 'rgba(0,0,0,0.35)',
+          borderRadius: 4,
+          padding: '1px 4px',
+        }}>
+          ⭐{order.template.expReward}
+        </span>
       </div>
 
-      {/* Complete indicator */}
+      {/* Complete overlay button - covers entire card when order is fulfillable */}
       {canFulfill && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
+        <motion.button
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          onClick={onFulfill}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onFulfill() } }}
+          aria-label="完成订单"
           style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'rgba(20, 50, 20, 0.88)',
+            border: 'none',
+            borderRadius: 10,
             color: '#4ade80',
-            fontSize: 11,
+            fontSize: 14,
             fontWeight: 'bold',
             letterSpacing: 1,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
         >
           ✓ 完成
-        </motion.div>
+        </motion.button>
       )}
     </motion.div>
   )
