@@ -24,12 +24,12 @@ interface EconomyActions {
 
 export const useEconomyStore = create<EconomyState & EconomyActions>()(
   immer((set, get) => ({
-    coins: 151,
-    energy: 49,
+    coins: 0,
+    energy: 100,
     maxEnergy: 100,
-    gems: 63,
-    level: 18,
-    exp: 120,
+    gems: 0,
+    level: 0,
+    exp: 0,
     maxExp: 200,
     lastEnergyRefill: Date.now(),
 
