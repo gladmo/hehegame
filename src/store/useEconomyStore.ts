@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
+import { persist } from 'zustand/middleware'
 
 interface EconomyState {
   coins: number
@@ -23,7 +24,8 @@ interface EconomyActions {
 }
 
 export const useEconomyStore = create<EconomyState & EconomyActions>()(
-  immer((set, get) => ({
+  persist(
+    immer((set, get) => ({
     coins: 0,
     energy: 100,
     maxEnergy: 100,
@@ -82,5 +84,8 @@ export const useEconomyStore = create<EconomyState & EconomyActions>()(
         state.lastEnergyRefill = now
       })
     },
-  }))
-)
+  })),
+  {
+    name: 'hehegame-economy',
+  }
+))

@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
+import { persist } from 'zustand/middleware'
 import { canItemsMerge, canUnlock, getMergeResult, ITEM_MAP } from '@/data/items'
 
 export const COLS = 7
@@ -44,7 +45,7 @@ interface BoardActions {
   spawnItem: (itemId: string, preferIdx?: number) => boolean
 }
 
-let _instanceCounter = 0
+let _instanceCounter = Date.now() * 1000
 function newInstance(itemId: string): BoardItem {
   return { instanceId: `${itemId}_${++_instanceCounter}`, itemId, isLocked: false }
 }
@@ -117,10 +118,11 @@ function buildInitialBoard(): Cell[] {
 
 // ─── Store ────────────────────────────────────────────────────────────────────
 export const useBoardStore = create<BoardState & BoardActions>()(
-  immer((set, get) => ({
-    cells: buildInitialBoard(),
-    drag: { fromIdx: null, targetIdx: null, canMerge: false, canUnlockTarget: false },
-    selectedIdx: null,
+  persist(
+    immer((set, get) => ({
+      cells: buildInitialBoard(),
+      drag: { fromIdx: null, targetIdx: null, canMerge: false, canUnlockTarget: false },
+      selectedIdx: null,
 
     initBoard: () => {
       set(state => { state.cells = buildInitialBoard() })
@@ -289,5 +291,9 @@ export const useBoardStore = create<BoardState & BoardActions>()(
       set(state => { state.cells[emptyIdx].item = newInstance(itemId) })
       return true
     },
-  }))
-)
+  })),
+  {
+    name: 'hehegame-board',
+    partialize: (state) => ({ cells: state.cells }),
+  }
+))

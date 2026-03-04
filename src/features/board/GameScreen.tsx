@@ -8,7 +8,6 @@ import ItemDetailBar from './components/ItemDetailBar'
 
 const GameScreen: React.FC = () => {
   const initOrders = useOrderStore(s => s.initOrders)
-  const removeExpiredOrders = useOrderStore(s => s.removeExpiredOrders)
   const tickEnergy = useEconomyStore(s => s.tickEnergy)
 
   useEffect(() => {
@@ -16,14 +15,11 @@ const GameScreen: React.FC = () => {
 
     // Tick energy every 2 minutes
     const energyTick = setInterval(tickEnergy, 2 * 60 * 1000)
-    // Remove expired orders every 30s
-    const orderTick = setInterval(removeExpiredOrders, 30_000)
 
     return () => {
       clearInterval(energyTick)
-      clearInterval(orderTick)
     }
-  }, [initOrders, tickEnergy, removeExpiredOrders])
+  }, [initOrders, tickEnergy])
 
   return (
     <div style={{

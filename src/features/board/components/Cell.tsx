@@ -14,6 +14,43 @@ interface CellProps {
   onPointerDown: (e: React.PointerEvent) => void
 }
 
+// Floating star particles for generator cells
+const STAR_CONFIGS = [
+  { left: '20%', delay: 0 },
+  { left: '55%', delay: 0.5 },
+  { left: '78%', delay: 1.0 },
+]
+
+const GeneratorStars: React.FC = () => (
+  <>
+    {STAR_CONFIGS.map((cfg, i) => (
+      <motion.div
+        key={i}
+        style={{
+          position: 'absolute',
+          bottom: '10%',
+          left: cfg.left,
+          fontSize: 7,
+          color: '#ffffff',
+          pointerEvents: 'none',
+          zIndex: 5,
+          lineHeight: 1,
+        }}
+        animate={{ y: [0, -18, -30], opacity: [0, 0.9, 0] }}
+        transition={{
+          duration: 1.6,
+          repeat: Infinity,
+          delay: cfg.delay,
+          ease: 'easeOut',
+          repeatDelay: 0.2,
+        }}
+      >
+        ✦
+      </motion.div>
+    ))}
+  </>
+)
+
 const Cell: React.FC<CellProps> = memo(({
   idx,
   item,
@@ -91,10 +128,13 @@ const Cell: React.FC<CellProps> = memo(({
 
           {/* Generator indicator */}
           {def.isGenerator && !item.isLocked && (
-            <div style={{
-              position: 'absolute', top: 1, right: 2,
-              fontSize: 9, lineHeight: 1,
-            }}>⚡</div>
+            <>
+              <div style={{
+                position: 'absolute', top: 1, right: 2,
+                fontSize: 9, lineHeight: 1,
+              }}>⚡</div>
+              <GeneratorStars />
+            </>
           )}
 
           {/* Lock overlay */}
