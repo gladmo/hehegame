@@ -201,7 +201,7 @@ export const useBoardStore = create<BoardState & BoardActions>()(
         if (targetIdx !== null && toItem && canMerge) {
           // Merge: replace target with merged item, clear source
           const resultId = getMergeResult(fromItem.itemId)!
-          state.cells[targetIdx].item = { instanceId: `${resultId}_${++_instanceCounter}`, itemId: resultId, isLocked: false }
+          state.cells[targetIdx].item = newInstance(resultId)
           state.cells[fromIdx].item = null
         } else if (targetIdx !== null && toItem && canUnlockTarget) {
           // Unlock: consume the dragged piece, unlock the locked piece

@@ -16,14 +16,8 @@ interface OrderState {
 interface OrderActions {
   initOrders: () => void
   refreshOrders: () => void
-  /** Try to fulfill an order using items currently on board. Returns coin reward or -1 on fail. */
+  /** Check if an order can be fulfilled with the given board item IDs */
   canFulfill: (orderId: string, boardItemIds: string[]) => boolean
-  fulfillOrder: (
-    orderId: string,
-    boardItemIds: string[],
-    removeItemFn: (instanceId: string) => boolean,
-    addCoinsFn: (amount: number) => void
-  ) => boolean
   removeExpiredOrders: () => void
 }
 
@@ -76,18 +70,6 @@ export const useOrderStore = create<OrderState & OrderActions>()(
         if (found < req.count) return false
       }
       return true
-    },
-
-    fulfillOrder: (orderId, boardItemIds, removeItemFn, addCoinsFn) => {
-      const { activeOrders } = get()
-      const order = activeOrders.find(o => o.instanceId === orderId)
-      if (!order || order.fulfilled) return false
-
-      // Collect instance IDs to remove - we need to map itemId→instanceIds from board
-      // boardItemIds here is actually [{instanceId, itemId}] - but we pass flat itemIds
-      // We need the board store's full items. Let's use a richer param.
-      // Actually we'll pass an array of {instanceId, itemId}
-      return false // placeholder - see fulfillOrderWithItems below
     },
 
     removeExpiredOrders: () => {

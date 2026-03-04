@@ -18,7 +18,7 @@ const BoardGrid: React.FC = () => {
 
   const isDragging = drag.fromIdx !== null
   const gridRef = useRef<HTMLDivElement>(null)
-  const pointerDownRef = useRef<{ idx: number; moved: boolean }>({ idx: -1, moved: false })
+  const pointerDownRef = useRef<{ idx: number }>({ idx: -1 })
 
   const handlePointerDown = useCallback((e: React.PointerEvent, idx: number) => {
     const item = cells[idx]?.item
@@ -27,7 +27,7 @@ const BoardGrid: React.FC = () => {
       return
     }
     e.currentTarget.setPointerCapture(e.pointerId)
-    pointerDownRef.current = { idx, moved: false }
+    pointerDownRef.current = { idx }
     startDrag(idx)
   }, [cells, startDrag, selectCell])
 
