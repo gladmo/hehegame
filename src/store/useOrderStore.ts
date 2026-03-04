@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
-import { OrderTemplate, pickRandomOrders } from '@/data/orders'
+import { OrderTemplate, ORDER_TEMPLATES, pickRandomOrders } from '@/data/orders'
 
 export interface ActiveOrder {
   instanceId: string
@@ -37,10 +37,14 @@ export const useOrderStore = create<OrderState & OrderActions>()(
     activeOrders: [],
 
     initOrders: () => {
-      const templates = pickRandomOrders(3)
-      set(state => {
-        state.activeOrders = templates.map(createActiveOrder)
-      })
+      const tutorialTemplate = ORDER_TEMPLATES.find(t => t.id === 'order_tutorial')
+      const excludeIds = tutorialTemplate ? ['order_tutorial'] : []
+      const count = tutorialTemplate ? 2 : 3
+      const others = pickRandomOrders(count, excludeIds)
+      const initial = tutorialTemplate
+        ? [createActiveOrder(tutorialTemplate), ...others.map(createActiveOrder)]
+        : others.map(createActiveOrder)
+      set(state => { state.activeOrders = initial })
     },
 
     refreshOrders: () => {

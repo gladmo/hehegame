@@ -55,6 +55,7 @@ function emptyGrid(): Cell[] {
 
 // ─── Initial board layout ────────────────────────────────────────────────────
 // 7 cols × 9 rows = 63 cells. Row 0 = top. cell index = row * COLS + col
+// Tutorial-friendly: generators + a few level-1 items unlocked; most pieces locked.
 function buildInitialBoard(): Cell[] {
   const cells = emptyGrid()
 
@@ -65,66 +66,51 @@ function buildInitialBoard(): Cell[] {
     cells[idx].item = { instanceId: `${itemId}_${++_instanceCounter}`, itemId, isLocked: locked, lockHits: hits }
   }
 
-  // Row 0: generators + some low-level items
-  place(0, 0, 'lantern_1')
-  place(0, 1, 'poultry_gen')   // generator
-  place(0, 2, 'poultry_1')
-  place(0, 3, 'poultry_1')
-  place(0, 4, 'pastry_1')
-  place(0, 5, 'pastry_1')
-  place(0, 6, 'tool_gen')      // generator
+  // ── Row 0: generators (unlocked) + starting level-1 items ──────────────────
+  place(0, 1, 'poultry_gen')    // generator – click ⚡ to spawn poultry_1
+  place(0, 2, 'poultry_1')      // ready to merge
+  place(0, 3, 'poultry_1')      // ready to merge → get poultry_2 right away
+  place(0, 5, 'tool_gen')       // generator – click ⚡ to spawn tool_1
 
-  // Row 1: low-level items
+  // ── Row 1: two tea_1 to merge, one locked mid-level to unlock later ─────────
   place(1, 0, 'tea_1')
-  place(1, 1, 'tea_1')
-  place(1, 2, 'tea_2')
-  place(1, 5, 'lantern_2')
-  place(1, 6, 'jewelry_1')
+  place(1, 1, 'tea_1')          // tea_1 + tea_1 → tea_2
+  place(1, 6, 'lantern_2', true, 1)  // unlock by dragging lantern_1
 
-  // Row 2: mid items + first locked piece
-  place(2, 0, 'pastry_2')
-  place(2, 1, 'poultry_2')
-  place(2, 5, 'tea_4', true)   // LOCKED - needs tea to unlock
-  place(2, 6, 'pastry_4', true) // LOCKED
+  // ── Row 2: one pastry_1 as extra material; locked mid-level items ───────────
+  place(2, 0, 'pastry_1')
+  place(2, 5, 'tea_4',    true, 2)   // LOCKED – needs tea items to unlock
+  place(2, 6, 'pastry_4', true, 2)   // LOCKED
 
-  // Row 3: sparse
-  place(3, 5, 'jewelry_3', true) // LOCKED
-  place(3, 6, 'lantern_3', true) // LOCKED
+  // ── Row 3: locked mid-level ─────────────────────────────────────────────────
+  place(3, 5, 'jewelry_3', true, 2)  // LOCKED
+  place(3, 6, 'lantern_3', true, 2)  // LOCKED
 
-  // Row 4: mix
-  place(4, 0, 'pastry_1')
-  place(4, 1, 'tea_1')
-  place(4, 2, 'tool_1')
-  place(4, 3, 'tool_1')
+  // ── Row 4: tool_1 pair to merge + locked item ───────────────────────────────
+  place(4, 0, 'tool_1')
+  place(4, 1, 'tool_1')          // tool_1 + tool_1 → tool_2
+  place(4, 5, 'pastry_3', true, 1)   // LOCKED – unlock with pastry items
+  place(4, 6, 'jewelry_2', true, 1)  // LOCKED
 
-  // Row 5: more items
-  place(5, 0, 'poultry_3')
-  place(5, 1, 'pastry_3')
-  place(5, 2, 'tool_2')
-  place(5, 3, 'tea_3')
-  place(5, 4, 'jewelry_2')
-  place(5, 5, 'poultry_5', true) // LOCKED high-level
-  place(5, 6, 'tea_5', true)     // LOCKED high-level
+  // ── Row 5: lantern_1 (unlocked) + high-level locked ─────────────────────────
+  place(5, 0, 'lantern_1')       // can merge two of these → lantern_2
+  place(5, 5, 'poultry_5', true, 3)  // LOCKED high-level
+  place(5, 6, 'tea_5',     true, 3)  // LOCKED high-level
 
-  // Row 6
-  place(6, 0, 'lantern_1')
-  place(6, 1, 'jewelry_1')
-  place(6, 2, 'tool_1')
-  place(6, 3, 'poultry_1')
-  place(6, 4, 'tea_2')
-  place(6, 5, 'pastry_2')
+  // ── Row 6: jewelry_1 (unlocked) + locked mid/high ───────────────────────────
+  place(6, 0, 'jewelry_1')
+  place(6, 5, 'poultry_3', true, 1)  // LOCKED
+  place(6, 6, 'pastry_5',  true, 3)  // LOCKED
 
-  // Row 7
-  place(7, 0, 'poultry_2')
-  place(7, 1, 'tea_1')
-  place(7, 2, 'tool_1')
-  place(7, 3, 'lantern_2')
-  place(7, 4, 'jewelry_2')
+  // ── Row 7: locked filler ────────────────────────────────────────────────────
+  place(7, 3, 'lantern_4', true, 2)  // LOCKED
+  place(7, 4, 'tea_3',     true, 1)  // LOCKED
+  place(7, 5, 'poultry_4', true, 2)  // LOCKED
 
-  // Row 8: bottom row - locked high-value items
-  place(8, 3, 'pastry_5', true)  // LOCKED
-  place(8, 4, 'poultry_6', true) // LOCKED
-  place(8, 5, 'tea_6', true)     // LOCKED
+  // ── Row 8: locked high-value items ──────────────────────────────────────────
+  place(8, 3, 'pastry_6',  true, 3)  // LOCKED
+  place(8, 4, 'poultry_6', true, 3)  // LOCKED
+  place(8, 5, 'tea_6',     true, 3)  // LOCKED
 
   return cells
 }

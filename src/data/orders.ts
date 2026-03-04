@@ -14,6 +14,14 @@ export interface OrderTemplate {
 
 export const ORDER_TEMPLATES: OrderTemplate[] = [
   {
+    id: 'order_tutorial',
+    name: '🎓 新手任务',
+    requirements: [{ itemId: 'poultry_1', count: 2 }],
+    coinReward: 50,
+    expReward: 20,
+    timeLimit: 86400,
+  },
+  {
     id: 'order_tea_basic',
     name: '茶馆日常',
     requirements: [{ itemId: 'tea_1', count: 2 }],
