@@ -107,6 +107,7 @@ const OrderPanel: React.FC = () => {
   const cells = useBoardStore(s => s.cells)
   const removeItem = useBoardStore(s => s.removeItem)
   const addCoins = useEconomyStore(s => s.addCoins)
+  const addExp = useEconomyStore(s => s.addExp)
   const canFulfillFn = useOrderStore(s => s.canFulfill)
 
   // Build flat list of {instanceId, itemId} from non-locked board items
@@ -121,7 +122,7 @@ const OrderPanel: React.FC = () => {
   }
 
   const handleFulfill = (order: ActiveOrder) => {
-    fulfillOrderAction(order.instanceId, boardItems, removeItem, addCoins)
+    fulfillOrderAction(order.instanceId, boardItems, removeItem, addCoins, addExp)
   }
 
   const hasNonLocked = boardItems.length > 0

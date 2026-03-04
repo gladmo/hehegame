@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 import { canItemsMerge, canUnlock, getMergeResult, ITEM_MAP } from '@/data/items'
+import { useCollectionStore } from '@/store/useCollectionStore'
 
 export const COLS = 7
 export const ROWS = 9
@@ -203,6 +204,7 @@ export const useBoardStore = create<BoardState & BoardActions>()(
           const resultId = getMergeResult(fromItem.itemId)!
           state.cells[targetIdx].item = newInstance(resultId)
           state.cells[fromIdx].item = null
+          useCollectionStore.getState().recordItemCreation(resultId)
         } else if (targetIdx !== null && toItem && canUnlockTarget) {
           // Unlock: consume the dragged piece, unlock the locked piece
           const lockedItem = state.cells[targetIdx].item!
@@ -266,6 +268,7 @@ export const useBoardStore = create<BoardState & BoardActions>()(
         const targetIdx = emptyCells[0]
         state.cells[targetIdx].item = newInstance(def.generatesId!)
       })
+      useCollectionStore.getState().recordItemCreation(def.generatesId!)
     },
 
     selectCell: (idx) => {
@@ -295,11 +298,13 @@ export const useBoardStore = create<BoardState & BoardActions>()(
       const { cells } = get()
       if (preferIdx !== undefined && !cells[preferIdx].item) {
         set(state => { state.cells[preferIdx].item = newInstance(itemId) })
+        useCollectionStore.getState().recordItemCreation(itemId)
         return true
       }
       const emptyIdx = cells.findIndex(c => !c.item)
       if (emptyIdx === -1) return false
       set(state => { state.cells[emptyIdx].item = newInstance(itemId) })
+      useCollectionStore.getState().recordItemCreation(itemId)
       return true
     },
   }))

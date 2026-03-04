@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 import { OrderTemplate, pickRandomOrders } from '@/data/orders'
+import { useCollectionStore } from '@/store/useCollectionStore'
 
 export interface ActiveOrder {
   instanceId: string
@@ -86,7 +87,8 @@ export function fulfillOrderAction(
   orderId: string,
   boardItems: Array<{ instanceId: string; itemId: string }>,
   removeItemFn: (instanceId: string) => boolean,
-  addCoinsFn: (amount: number) => void
+  addCoinsFn: (amount: number) => void,
+  addExpFn?: (amount: number) => void
 ): boolean {
   const { activeOrders } = useOrderStore.getState()
   const order = activeOrders.find(o => o.instanceId === orderId)
@@ -108,9 +110,13 @@ export function fulfillOrderAction(
     if (needed > 0) return false // not enough
   }
 
-  // Execute removals
+  // Execute removals and record usage
   for (const instanceId of toRemove) {
     removeItemFn(instanceId)
+  }
+  // Record item usage for collection tracking (batched by requirement)
+  for (const req of order.template.requirements) {
+    useCollectionStore.getState().recordItemUsage(req.itemId, req.count)
   }
 
   // Mark fulfilled & add coins
@@ -120,6 +126,7 @@ export function fulfillOrderAction(
   })
 
   addCoinsFn(order.template.coinReward)
+  if (addExpFn) addExpFn(order.template.expReward)
 
   // Replace with new order after a delay
   setTimeout(() => {
