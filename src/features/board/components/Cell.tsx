@@ -1,6 +1,6 @@
 import React, { memo } from 'react'
 import { motion } from 'framer-motion'
-import { BoardItem } from '@/store/useBoardStore'
+import { BoardItem, COLS } from '@/store/useBoardStore'
 import { ITEM_MAP } from '@/data/items'
 
 interface CellProps {
@@ -63,8 +63,13 @@ const Cell: React.FC<CellProps> = memo(({
 }) => {
   const def = item ? ITEM_MAP[item.itemId] : null
 
-  let borderColor = '#b89a60'
-  let bgColor = 'rgba(210,175,120,0.25)'
+  // Checkerboard alternating background for better cell identification
+  const row = Math.floor(idx / COLS)
+  const col = idx % COLS
+  const isLightCell = (row + col) % 2 === 0
+
+  let borderColor = isLightCell ? '#c4a46a' : '#a8885a'
+  let bgColor = isLightCell ? 'rgba(220,185,130,0.40)' : 'rgba(175,140,90,0.40)'
   if (isDropTarget && canMerge) { borderColor = '#4ade80'; bgColor = 'rgba(74,222,128,0.2)' }
   else if (isDropTarget && canUnlockTarget) { borderColor = '#facc15'; bgColor = 'rgba(250,204,21,0.2)' }
   else if (isDropTarget) { borderColor = '#93c5fd'; bgColor = 'rgba(147,197,253,0.15)' }
@@ -103,7 +108,7 @@ const Cell: React.FC<CellProps> = memo(({
         >
           {/* Emoji (dimmed when locked) */}
           <div style={{
-            fontSize: 'clamp(22px, 5.5vw, 34px)',
+            fontSize: 'clamp(26px, 6.5vw, 42px)',
             lineHeight: 1,
             opacity: item.isLocked ? 0.45 : 1,
             filter: item.isLocked ? 'grayscale(60%)' : 'none',
