@@ -94,10 +94,25 @@ export const ORDER_TEMPLATES: OrderTemplate[] = [
     expReward: 120,
   },
   {
-    id: 'order_tool_basic',
-    requirements: [{ itemId: 'tool_1', count: 1 }],
-    coinReward: 15,
-    expReward: 8,
+    id: 'order_textile_basic',
+    requirements: [{ itemId: 'textile_1', count: 1 }],
+    coinReward: 20,
+    expReward: 10,
+  },
+  {
+    id: 'order_textile_mid',
+    requirements: [{ itemId: 'textile_3', count: 1 }],
+    coinReward: 70,
+    expReward: 35,
+  },
+  {
+    id: 'order_multi_textile',
+    requirements: [
+      { itemId: 'textile_2', count: 1 },
+      { itemId: 'jewelry_2', count: 1 },
+    ],
+    coinReward: 90,
+    expReward: 45,
   },
 ]
 
