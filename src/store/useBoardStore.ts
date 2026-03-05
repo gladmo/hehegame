@@ -68,10 +68,10 @@ function buildInitialBoard(): Cell[] {
   }
 
   // ── Row 0: generators (unlocked) + starting level-1 items ──────────────────
-  place(0, 1, 'poultry_gen')    // generator – click ⚡ to spawn poultry_1
+  place(0, 1, 'poultry_gen')    // generator – auto-spawns poultry_1 (老母鸡)
   place(0, 2, 'poultry_1')      // ready to merge
   place(0, 3, 'poultry_1')      // ready to merge → get poultry_2 right away
-  place(0, 5, 'tool_gen')       // generator – click ⚡ to spawn tool_1
+  place(0, 5, 'pastry_gen')     // generator – click ⚡ to spawn pastry_1 (竹华食篓)
 
   // ── Row 1: two tea_1 to merge, one locked mid-level to unlock later ─────────
   place(1, 0, 'tea_1')
@@ -83,13 +83,16 @@ function buildInitialBoard(): Cell[] {
   place(2, 5, 'tea_4',    true, 2)   // LOCKED – needs tea items to unlock
   place(2, 6, 'pastry_4', true, 2)   // LOCKED
 
-  // ── Row 3: locked mid-level ─────────────────────────────────────────────────
+  // ── Row 3: generators for jewelry/tea/lantern + locked mid-level ────────────
+  place(3, 0, 'jewelry_gen')    // generator – click ⚡ to spawn jewelry_1 (妆奁)
+  place(3, 3, 'tea_gen')        // generator – click ⚡ to spawn tea_1 (茶壶)
+  place(3, 4, 'lantern_gen')    // generator – click ⚡ to spawn lantern_1 (手作盒)
   place(3, 5, 'jewelry_3', true, 2)  // LOCKED
   place(3, 6, 'lantern_3', true, 2)  // LOCKED
 
-  // ── Row 4: tool_1 pair to merge + locked item ───────────────────────────────
-  place(4, 0, 'tool_1')
-  place(4, 1, 'tool_1')          // tool_1 + tool_1 → tool_2
+  // ── Row 4: textile generator + starting textile items + locked items ─────────
+  place(4, 0, 'textile_gen')    // generator – click ⚡ to spawn textile_1 (纺车)
+  place(4, 1, 'textile_1')      // starting textile item
   place(4, 5, 'pastry_3', true, 1)   // LOCKED – unlock with pastry items
   place(4, 6, 'jewelry_2', true, 1)  // LOCKED
 
