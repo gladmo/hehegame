@@ -4,6 +4,7 @@ import { useBoardStore, COLS, ROWS } from '@/store/useBoardStore'
 import { useEconomyStore } from '@/store/useEconomyStore'
 import { ITEM_MAP } from '@/data/items'
 import Cell from './Cell'
+import ItemIcon from '@/shared/ItemIcon'
 
 const GHOST_SIZE = 52
 
@@ -123,7 +124,7 @@ const BoardGrid: React.FC = () => {
             exit={{ scale: 0.7, opacity: 0 }}
             transition={{ type: 'spring', stiffness: 450, damping: 28 }}
           >
-            {draggedDef.emoji}
+            <ItemIcon def={draggedDef} fontSize={32} />
           </motion.div>
         )}
       </AnimatePresence>

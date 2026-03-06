@@ -4,6 +4,7 @@ import { useOrderStore, fulfillOrderAction, ActiveOrder } from '@/store/useOrder
 import { useBoardStore } from '@/store/useBoardStore'
 import { useEconomyStore } from '@/store/useEconomyStore'
 import { ITEM_MAP } from '@/data/items'
+import ItemIcon from '@/shared/ItemIcon'
 
 const OrderCard: React.FC<{ order: ActiveOrder; onFulfill: () => void; canFulfill: boolean }> = ({
   order, onFulfill, canFulfill,
@@ -48,7 +49,7 @@ const OrderCard: React.FC<{ order: ActiveOrder; onFulfill: () => void; canFulfil
           const def = ITEM_MAP[req.itemId]
           return (
             <span key={req.itemId} style={{ fontSize: 26, lineHeight: 1 }}>
-              {def?.emoji ?? '?'}
+              {def ? <ItemIcon def={def} fontSize={26} /> : '?'}
             </span>
           )
         })}
