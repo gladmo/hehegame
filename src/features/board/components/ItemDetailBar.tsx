@@ -1,6 +1,7 @@
 import React from 'react'
 import { useBoardStore } from '@/store/useBoardStore'
 import { ITEM_MAP } from '@/data/items'
+import ItemIcon from '@/shared/ItemIcon'
 
 const sideBtnStyle: React.CSSProperties = {
   display: 'flex',
@@ -59,7 +60,7 @@ const ItemDetailBar: React.FC = () => {
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: 26, flexShrink: 0,
             }}>
-              {def.emoji}
+              <ItemIcon def={def} fontSize={26} />
             </div>
 
             {/* Info */}

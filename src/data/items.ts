@@ -7,6 +7,7 @@ export interface ItemDef {
   level: number
   name: string
   emoji: string
+  icon?: string          // optional image URL; if set, shown instead of emoji
   isGenerator?: boolean  // clicking spawns a child item
   generatesId?: string   // which item it generates
   mergeResultId?: string // what two of this item merge into

@@ -2,6 +2,7 @@ import React, { memo } from 'react'
 import { motion } from 'framer-motion'
 import { BoardItem, COLS } from '@/store/useBoardStore'
 import { ITEM_MAP } from '@/data/items'
+import ItemIcon from '@/shared/ItemIcon'
 
 interface CellProps {
   idx: number
@@ -106,15 +107,13 @@ const Cell: React.FC<CellProps> = memo(({
             width: '100%', height: '100%', position: 'relative',
           }}
         >
-          {/* Emoji (dimmed when locked) */}
-          <div style={{
-            fontSize: 'clamp(26px, 6.5vw, 42px)',
-            lineHeight: 1,
-            opacity: item.isLocked ? 0.45 : 1,
-            filter: item.isLocked ? 'grayscale(60%)' : 'none',
-          }}>
-            {def.emoji}
-          </div>
+          {/* Icon or Emoji (dimmed when locked) */}
+          <ItemIcon
+            def={def}
+            fontSize='clamp(26px, 6.5vw, 42px)'
+            opacity={item.isLocked ? 0.45 : 1}
+            filter={item.isLocked ? 'grayscale(60%)' : undefined}
+          />
 
           {/* Level badge */}
           {def.level > 0 && (
