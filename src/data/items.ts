@@ -22,8 +22,8 @@ const poultryChain: ItemDef[] = [
   { id: 'poultry_3', chainType: 'poultry', level: 3, name: '蛋炒饭', emoji: '🐣', icon: './assets/poultry_3.png', mergeResultId: 'poultry_4' },
   { id: 'poultry_4', chainType: 'poultry', level: 4, name: '蛋炒盖饭', emoji: '🐥', icon: './assets/poultry_4.png', mergeResultId: 'poultry_5' },
   { id: 'poultry_5', chainType: 'poultry', level: 5, name: '鸡腿盖饭', emoji: '🍜', icon: './assets/poultry_5.png', mergeResultId: 'poultry_6' },
-  { id: 'poultry_6', chainType: 'poultry', level: 5, name: '飘香烤鸡', emoji: '🍜', icon: './assets/poultry_6.png', mergeResultId: 'poultry_6' },
-  { id: 'poultry_7', chainType: 'poultry', level: 6, name: '荷叶蒸鸡', emoji: '🪺', icon: './assets/poultry_7.png' },
+  { id: 'poultry_6', chainType: 'poultry', level: 6, name: '飘香烤鸡', emoji: '🍜', icon: './assets/poultry_6.png', mergeResultId: 'poultry_6' },
+  { id: 'poultry_7', chainType: 'poultry', level: 7, name: '荷叶蒸鸡', emoji: '🪺', icon: './assets/poultry_7.png' },
 ]
 
 // ─── Tea chain (click-generator) ─────────────────────────────────────────────
@@ -48,15 +48,15 @@ const pastryChain: ItemDef[] = [
   { id: 'pastry_4', chainType: 'pastry', level: 4, name: '蛋黄酥', emoji: '🥐', icon: './assets/pastry_4.png', mergeResultId: 'pastry_5' },
   { id: 'pastry_5', chainType: 'pastry', level: 5, name: '海棠糕', emoji: '🎂', icon: './assets/pastry_5.png', mergeResultId: 'pastry_6' },
   { id: 'pastry_6', chainType: 'pastry', level: 6, name: '宫廷糕点', emoji: '🍰', icon: './assets/pastry_6.png', mergeResultId: 'pastry_7' },
-  { id: 'pastry_7', chainType: 'pastry', level: 6, name: '宫廷糕点', emoji: '🍰', icon: './assets/pastry_7.png', mergeResultId: 'pastry_7' },
-  { id: 'pastry_8', chainType: 'pastry', level: 6, name: '宫廷糕点', emoji: '🍰', icon: './assets/pastry_8.png', mergeResultId: 'pastry_7' },
-  { id: 'pastry_9', chainType: 'pastry', level: 6, name: '宫廷糕点', emoji: '🍰', icon: './assets/pastry_9.png', mergeResultId: 'pastry_7' },
-  { id: 'pastry_10', chainType: 'pastry', level: 6, name: '宫廷糕点', emoji: '🍰', icon: './assets/pastry_10.png', mergeResultId: 'pastry_7' },
-  { id: 'pastry_11', chainType: 'pastry', level: 6, name: '宫廷糕点', emoji: '🍰', icon: './assets/pastry_11.png', mergeResultId: 'pastry_7' },
-  { id: 'pastry_12', chainType: 'pastry', level: 6, name: '宫廷糕点', emoji: '🍰', icon: './assets/pastry_12.png', mergeResultId: 'pastry_7' },
-  { id: 'pastry_13', chainType: 'pastry', level: 6, name: '宫廷糕点', emoji: '🍰', icon: './assets/pastry_13.png', mergeResultId: 'pastry_7' },
-  { id: 'pastry_14', chainType: 'pastry', level: 6, name: '宫廷糕点', emoji: '🍰', icon: './assets/pastry_14.png', mergeResultId: 'pastry_7' },
-  { id: 'pastry_15', chainType: 'pastry', level: 7, name: '玉兔摘柿盒', emoji: '🍮', icon: './assets/pastry_15.png' },
+  { id: 'pastry_7', chainType: 'pastry', level: 7, name: '宫廷糕点', emoji: '🍰', icon: './assets/pastry_7.png', mergeResultId: 'pastry_7' },
+  { id: 'pastry_8', chainType: 'pastry', level: 8, name: '宫廷糕点', emoji: '🍰', icon: './assets/pastry_8.png', mergeResultId: 'pastry_7' },
+  { id: 'pastry_9', chainType: 'pastry', level: 9, name: '宫廷糕点', emoji: '🍰', icon: './assets/pastry_9.png', mergeResultId: 'pastry_7' },
+  { id: 'pastry_10', chainType: 'pastry', level: 10, name: '宫廷糕点', emoji: '🍰', icon: './assets/pastry_10.png', mergeResultId: 'pastry_7' },
+  { id: 'pastry_11', chainType: 'pastry', level: 11, name: '宫廷糕点', emoji: '🍰', icon: './assets/pastry_11.png', mergeResultId: 'pastry_7' },
+  { id: 'pastry_12', chainType: 'pastry', level: 12, name: '宫廷糕点', emoji: '🍰', icon: './assets/pastry_12.png', mergeResultId: 'pastry_7' },
+  { id: 'pastry_13', chainType: 'pastry', level: 13, name: '宫廷糕点', emoji: '🍰', icon: './assets/pastry_13.png', mergeResultId: 'pastry_7' },
+  { id: 'pastry_14', chainType: 'pastry', level: 14, name: '宫廷糕点', emoji: '🍰', icon: './assets/pastry_14.png', mergeResultId: 'pastry_7' },
+  { id: 'pastry_15', chainType: 'pastry', level: 15, name: '玉兔摘柿盒', emoji: '🍮', icon: './assets/pastry_15.png' },
 ]
 
 // ─── Lantern chain (click-generator, max level 5) ────────────────────────────
@@ -67,14 +67,14 @@ const lanternChain: ItemDef[] = [
   { id: 'lantern_2', chainType: 'lantern', level: 2, name: '圆灯笼', emoji: '🏮', icon: './assets/lantern_2.png', mergeResultId: 'lantern_3' },
   { id: 'lantern_3', chainType: 'lantern', level: 3, name: '彩灯笼', emoji: '🪔', icon: './assets/lantern_3.png', mergeResultId: 'lantern_4' },
   { id: 'lantern_4', chainType: 'lantern', level: 4, name: '宫廷灯', emoji: '💡', icon: './assets/lantern_4.png', mergeResultId: 'lantern_5' },
-  { id: 'lantern_5', chainType: 'lantern', level: 4, name: '宫廷灯', emoji: '💡', icon: './assets/lantern_5.png', mergeResultId: 'lantern_5' },
-  { id: 'lantern_6', chainType: 'lantern', level: 4, name: '宫廷灯', emoji: '💡', icon: './assets/lantern_6.png', mergeResultId: 'lantern_5' },
-  { id: 'lantern_7', chainType: 'lantern', level: 4, name: '宫廷灯', emoji: '💡', icon: './assets/lantern_7.png', mergeResultId: 'lantern_5' },
-  { id: 'lantern_8', chainType: 'lantern', level: 4, name: '宫廷灯', emoji: '💡', icon: './assets/lantern_8.png', mergeResultId: 'lantern_5' },
-  { id: 'lantern_9', chainType: 'lantern', level: 4, name: '宫廷灯', emoji: '💡', icon: './assets/lantern_9.png', mergeResultId: 'lantern_5' },
-  { id: 'lantern_10', chainType: 'lantern', level: 4, name: '宫廷灯', emoji: '💡', icon: './assets/lantern_10.png', mergeResultId: 'lantern_5' },
-  { id: 'lantern_11', chainType: 'lantern', level: 4, name: '宫廷灯', emoji: '💡', icon: './assets/lantern_11.png', mergeResultId: 'lantern_5' },
-  { id: 'lantern_12', chainType: 'lantern', level: 5, name: '九龙玉灯', emoji: '🔆', icon: './assets/lantern_12.png' },
+  { id: 'lantern_5', chainType: 'lantern', level: 5, name: '宫廷灯', emoji: '💡', icon: './assets/lantern_5.png', mergeResultId: 'lantern_5' },
+  { id: 'lantern_6', chainType: 'lantern', level: 6, name: '宫廷灯', emoji: '💡', icon: './assets/lantern_6.png', mergeResultId: 'lantern_5' },
+  { id: 'lantern_7', chainType: 'lantern', level: 7, name: '宫廷灯', emoji: '💡', icon: './assets/lantern_7.png', mergeResultId: 'lantern_5' },
+  { id: 'lantern_8', chainType: 'lantern', level: 8, name: '宫廷灯', emoji: '💡', icon: './assets/lantern_8.png', mergeResultId: 'lantern_5' },
+  { id: 'lantern_9', chainType: 'lantern', level: 9, name: '宫廷灯', emoji: '💡', icon: './assets/lantern_9.png', mergeResultId: 'lantern_5' },
+  { id: 'lantern_10', chainType: 'lantern', level: 10, name: '宫廷灯', emoji: '💡', icon: './assets/lantern_10.png', mergeResultId: 'lantern_5' },
+  { id: 'lantern_11', chainType: 'lantern', level: 11, name: '宫廷灯', emoji: '💡', icon: './assets/lantern_11.png', mergeResultId: 'lantern_5' },
+  { id: 'lantern_12', chainType: 'lantern', level: 12, name: '九龙玉灯', emoji: '🔆', icon: './assets/lantern_12.png' },
 ]
 
 // ─── Jewelry chain (click-generator, max level 5) ─────────────────────────────
