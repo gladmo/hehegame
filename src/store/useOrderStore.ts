@@ -89,7 +89,8 @@ export function fulfillOrderAction(
   orderId: string,
   boardItems: Array<{ instanceId: string; itemId: string }>,
   removeItemFn: (instanceId: string) => boolean,
-  addCoinsFn: (amount: number) => void
+  addCoinsFn: (amount: number) => void,
+  spawnItemFn?: (itemId: string) => boolean,
 ): boolean {
   const { activeOrders } = useOrderStore.getState()
   const order = activeOrders.find(o => o.instanceId === orderId)
@@ -123,6 +124,11 @@ export function fulfillOrderAction(
   })
 
   addCoinsFn(order.template.coinReward)
+
+  // Spawn item reward on the board if present
+  if (order.template.itemRewardId && spawnItemFn) {
+    spawnItemFn(order.template.itemRewardId)
+  }
 
   // Replace with new order after a delay
   setTimeout(() => {

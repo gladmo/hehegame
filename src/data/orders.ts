@@ -8,6 +8,8 @@ export interface OrderTemplate {
   requirements: OrderRequirement[]  // max 3 items, each count = 1
   coinReward: number
   expReward: number
+  /** Item ID to spawn on the board as an extra reward when this order is fulfilled */
+  itemRewardId?: string
 }
 
 export const ORDER_TEMPLATES: OrderTemplate[] = [
@@ -113,6 +115,47 @@ export const ORDER_TEMPLATES: OrderTemplate[] = [
     ],
     coinReward: 90,
     expReward: 45,
+  },
+  // ── 礼盒棋子奖励订单 ─────────────────────────────────────────────────────────
+  {
+    id: 'order_redbox_basic',
+    requirements: [
+      { itemId: 'coolTea_1', count: 1 },
+      { itemId: 'dough_1',   count: 1 },
+    ],
+    coinReward: 60,
+    expReward: 30,
+    itemRewardId: 'redBox_1',
+  },
+  {
+    id: 'order_redbox_mid',
+    requirements: [
+      { itemId: 'coolTea_3', count: 1 },
+      { itemId: 'dough_3',   count: 1 },
+    ],
+    coinReward: 150,
+    expReward: 75,
+    itemRewardId: 'redBox_2',
+  },
+  {
+    id: 'order_greenbox_basic',
+    requirements: [
+      { itemId: 'egg_1',  count: 1 },
+      { itemId: 'ring_1', count: 1 },
+    ],
+    coinReward: 60,
+    expReward: 30,
+    itemRewardId: 'greenBox_1',
+  },
+  {
+    id: 'order_greenbox_mid',
+    requirements: [
+      { itemId: 'egg_3',  count: 1 },
+      { itemId: 'ring_3', count: 1 },
+    ],
+    coinReward: 150,
+    expReward: 75,
+    itemRewardId: 'greenBox_2',
   },
 ]
 

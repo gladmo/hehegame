@@ -18,6 +18,8 @@ export type ItemChainType =
   | 'loom'       // 织布机 generator chain (11 levels, produces from Lv5)
   | 'fabric'     // 布匹 child chain (5 levels; Lv5 also generates 荷包)
   | 'pouch'      // 荷包 child chain (10 levels)
+  | 'redBox'     // 红色漆盒 reward gift box (2 levels; produces 茶壶/食篓/织布机)
+  | 'greenBox'   // 绿色漆盒 reward gift box (2 levels; produces 老母鸡/妆奁/手作盒)
 
 /** Weighted random generation option */
 export interface GenerationOption {
@@ -337,6 +339,44 @@ const pouchChain: ItemDef[] = [
   { id: 'pouch_10', chainType: 'pouch', level: 10, name: '极品御赐荷包', emoji: '🌟' },
 ]
 
+// ─── 红色漆盒 reward gift box chain (2 levels) ────────────────────────────────
+// Lv1: randomly opens into one of teapot_1 / basket_1 / loom_1 (equal chance)
+// Lv2: randomly opens into one of teapot_2 / basket_2 / loom_2 (equal chance)
+// Two Lv1 boxes merge into one Lv2 box.
+const redBoxLv1Gen: GenerationOption[] = [
+  { itemId: 'teapot_1', baseWeight: 1 },
+  { itemId: 'basket_1', baseWeight: 1 },
+  { itemId: 'loom_1',   baseWeight: 1 },
+]
+const redBoxLv2Gen: GenerationOption[] = [
+  { itemId: 'teapot_2', baseWeight: 1 },
+  { itemId: 'basket_2', baseWeight: 1 },
+  { itemId: 'loom_2',   baseWeight: 1 },
+]
+const redBoxChain: ItemDef[] = [
+  makeGen('redBox_1', 'redBox', 1, '红色漆盒', '🧧', redBoxLv1Gen, 'teapot_1', 'redBox_2'),
+  makeGen('redBox_2', 'redBox', 2, '红色漆盒', '🧧', redBoxLv2Gen, 'teapot_2'),
+]
+
+// ─── 绿色漆盒 reward gift box chain (2 levels) ────────────────────────────────
+// Lv1: randomly opens into one of poultry_1 / dresser_1 / craftBox_1 (equal chance)
+// Lv2: randomly opens into one of poultry_2 / dresser_2 / craftBox_2 (equal chance)
+// Two Lv1 boxes merge into one Lv2 box.
+const greenBoxLv1Gen: GenerationOption[] = [
+  { itemId: 'poultry_1',  baseWeight: 1 },
+  { itemId: 'dresser_1',  baseWeight: 1 },
+  { itemId: 'craftBox_1', baseWeight: 1 },
+]
+const greenBoxLv2Gen: GenerationOption[] = [
+  { itemId: 'poultry_2',  baseWeight: 1 },
+  { itemId: 'dresser_2',  baseWeight: 1 },
+  { itemId: 'craftBox_2', baseWeight: 1 },
+]
+const greenBoxChain: ItemDef[] = [
+  makeGen('greenBox_1', 'greenBox', 1, '绿色漆盒', '🎁', greenBoxLv1Gen, 'poultry_1', 'greenBox_2'),
+  makeGen('greenBox_2', 'greenBox', 2, '绿色漆盒', '🎁', greenBoxLv2Gen, 'poultry_2'),
+]
+
 // ─── All items map ────────────────────────────────────────────────────────────
 export const ALL_ITEMS: ItemDef[] = [
   ...poultryChain,
@@ -355,6 +395,8 @@ export const ALL_ITEMS: ItemDef[] = [
   ...loomChain,
   ...fabricChain,
   ...pouchChain,
+  ...redBoxChain,
+  ...greenBoxChain,
 ]
 
 export const ITEM_MAP: Record<string, ItemDef> = {}
