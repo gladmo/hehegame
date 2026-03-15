@@ -10,6 +10,7 @@ const OrderCard: React.FC<{ order: ActiveOrder; onFulfill: () => void; canFulfil
   order, onFulfill, canFulfill,
 }) => {
   const isTutorial = order.template.id === 'order_tutorial'
+  const itemRewardDef = order.template.itemRewardId ? ITEM_MAP[order.template.itemRewardId] : null
 
   return (
     <motion.div
@@ -77,6 +78,21 @@ const OrderCard: React.FC<{ order: ActiveOrder; onFulfill: () => void; canFulfil
         }}>
           ⭐{order.template.expReward}
         </span>
+        {itemRewardDef && (
+          <span style={{
+            color: '#86efac',
+            fontSize: 10,
+            fontWeight: 'bold',
+            background: 'rgba(0,0,0,0.35)',
+            borderRadius: 4,
+            padding: '1px 4px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 2,
+          }}>
+            +<ItemIcon def={itemRewardDef} fontSize={12} />
+          </span>
+        )}
       </div>
 
       {/* Complete overlay button - covers entire card when order is fulfillable */}
@@ -114,6 +130,7 @@ const OrderPanel: React.FC = () => {
   const activeOrders = useOrderStore(s => s.activeOrders)
   const cells = useBoardStore(s => s.cells)
   const removeItem = useBoardStore(s => s.removeItem)
+  const spawnItem = useBoardStore(s => s.spawnItem)
   const addCoins = useEconomyStore(s => s.addCoins)
   const canFulfillFn = useOrderStore(s => s.canFulfill)
 
@@ -128,7 +145,7 @@ const OrderPanel: React.FC = () => {
   }
 
   const handleFulfill = (order: ActiveOrder) => {
-    fulfillOrderAction(order.instanceId, boardItems, removeItem, addCoins)
+    fulfillOrderAction(order.instanceId, boardItems, removeItem, addCoins, spawnItem)
   }
 
   return (
