@@ -21,6 +21,16 @@ const sideBtnStyle: React.CSSProperties = {
   padding: 0,
 }
 
+function formatCooldown(cooldownMs: number, lastGeneratedAt?: number): string {
+  if (!lastGeneratedAt) return '冷却中'
+  const remaining = Math.max(0, cooldownMs - (Date.now() - lastGeneratedAt))
+  if (remaining <= 0) return '已就绪'
+  const mins = Math.floor(remaining / 60000)
+  const hours = Math.floor(mins / 60)
+  if (hours > 0) return `${hours}时${mins % 60}分`
+  return `${mins}分钟`
+}
+
 const ItemDetailBar: React.FC = () => {
   const selectedIdx = useBoardStore(s => s.selectedIdx)
   const cells = useBoardStore(s => s.cells)
@@ -30,6 +40,24 @@ const ItemDetailBar: React.FC = () => {
   const item = selectedIdx !== null ? cells[selectedIdx]?.item : null
   const def = item ? ITEM_MAP[item.itemId] : null
   const mergeResultDef = def?.mergeResultId ? ITEM_MAP[def.mergeResultId] : null
+
+  const getDescription = (): string => {
+    if (!def || !item) return ''
+    if (item.isLocked) return `拖动同类低级棋子到此解锁 (还需 ${item.lockHits ?? 1} 次)`
+    if (def.isAutoGenerator) {
+      const stored = item.storedCount ?? 0
+      if (stored > 0) return `已存 ${stored} 枚，点击可产出到最近空格`
+      return `自动生成中·冷却 ${formatCooldown(def.cooldownMs ?? 3_600_000, item.lastGeneratedAt)}`
+    }
+    if (def.isGenerator) {
+      const generates = def.generatesId ? ITEM_MAP[def.generatesId] : null
+      const rareItems = def.generates?.filter(g => (g.levelBonus ?? 0) > 0).map(g => ITEM_MAP[g.itemId]?.name).filter(Boolean)
+      const rareText = rareItems && rareItems.length > 0 ? `，概率产出${rareItems.join('/')}` : ''
+      return `点击消耗⚡生成${generates?.name ?? '棋子'}${rareText}`
+    }
+    if (mergeResultDef) return `合成相同棋子 → ${mergeResultDef.emoji} ${mergeResultDef.name}`
+    return '已达最高等级'
+  }
 
   return (
     <div style={{
@@ -77,13 +105,7 @@ const ItemDetailBar: React.FC = () => {
                 {item.isLocked && <span style={{ fontSize: 11, color: '#f87171' }}>🔒 锁定中</span>}
               </div>
               <div style={{ color: '#94a3b8', fontSize: 11, marginTop: 2 }}>
-                {item.isLocked
-                  ? `拖动同类低级棋子到此解锁 (还需 ${item.lockHits ?? 1} 次)`
-                  : def.isGenerator
-                    ? '点击消耗体力⚡生成棋子'
-                    : mergeResultDef
-                      ? `合成相同棋子 → ${mergeResultDef.emoji} ${mergeResultDef.name}`
-                      : '已达最高等级'}
+                {getDescription()}
               </div>
             </div>
 

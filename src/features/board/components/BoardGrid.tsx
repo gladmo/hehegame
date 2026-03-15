@@ -78,8 +78,14 @@ const BoardGrid: React.FC = () => {
       if (item && !item.isLocked) {
         const def = ITEM_MAP[item.itemId]
         if (def?.isGenerator) {
-          const ok = spendEnergy(1)
-          if (ok) clickGenerator(fromIdx)
+          if (def.isAutoGenerator) {
+            // Auto-generator (老母鸡): no energy cost; spawns stored eggs on click
+            clickGenerator(fromIdx)
+          } else {
+            // Click generator: consume 1 energy then spawn
+            const ok = spendEnergy(1)
+            if (ok) clickGenerator(fromIdx)
+          }
           return
         }
       }
