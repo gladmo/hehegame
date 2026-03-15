@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useOrderStore } from '@/store/useOrderStore'
 import { useEconomyStore } from '@/store/useEconomyStore'
+import { useBoardStore } from '@/store/useBoardStore'
 import TopBar from './components/TopBar'
 import BoardGrid from './components/BoardGrid'
 import OrderPanel from './components/OrderPanel'
@@ -9,6 +10,7 @@ import ItemDetailBar from './components/ItemDetailBar'
 const GameScreen: React.FC = () => {
   const initOrders = useOrderStore(s => s.initOrders)
   const tickEnergy = useEconomyStore(s => s.tickEnergy)
+  const autoTickGenerators = useBoardStore(s => s.autoTickGenerators)
 
   useEffect(() => {
     initOrders()
@@ -16,10 +18,15 @@ const GameScreen: React.FC = () => {
     // Tick energy every 2 minutes
     const energyTick = setInterval(tickEnergy, 2 * 60 * 1000)
 
+    // Tick auto-generators every minute to process 老母鸡 egg storage and auto-spawn
+    autoTickGenerators()  // run once immediately on mount to catch up
+    const autoGenTick = setInterval(autoTickGenerators, 60 * 1000)
+
     return () => {
       clearInterval(energyTick)
+      clearInterval(autoGenTick)
     }
-  }, [initOrders, tickEnergy])
+  }, [initOrders, tickEnergy, autoTickGenerators])
 
   return (
     <div style={{
@@ -52,7 +59,7 @@ const GameScreen: React.FC = () => {
           opacity: 0.8,
           flexShrink: 0,
         }}>
-          拖动相同棋子合并升级 · 🔒锁定棋子需拖低级同类棋子解锁 · 点击⚡生成棋子
+        拖动相同棋子合并升级 · 🔒锁定棋子需拖低级同类棋子解锁 · ⚡点击消耗体力生成 · ⏳老母鸡自动生成
         </div>
         <div style={{ flex: 1, minHeight: 0 }}>
           <BoardGrid />

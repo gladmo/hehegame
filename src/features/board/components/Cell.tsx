@@ -133,10 +133,33 @@ const Cell: React.FC<CellProps> = memo(({
           {/* Generator indicator */}
           {def.isGenerator && !item.isLocked && (
             <>
-              <div style={{
-                position: 'absolute', top: 1, right: 2,
-                fontSize: 9, lineHeight: 1,
-              }}>⚡</div>
+              {def.isAutoGenerator ? (
+                // Auto-generator: show stored count badge with dynamic emoji
+                (item.storedCount ?? 0) > 0 ? (
+                  <div style={{
+                    position: 'absolute', top: 1, right: 2,
+                    fontSize: 9, fontWeight: 'bold',
+                    color: '#fef3c7',
+                    background: 'rgba(180,80,0,0.92)',
+                    borderRadius: 3, padding: '0 3px',
+                    lineHeight: '13px',
+                    zIndex: 3,
+                  }}>
+                    {item.storedCount}{def.generatesId ? (ITEM_MAP[def.generatesId]?.emoji ?? '🔷') : '🔷'}
+                  </div>
+                ) : (
+                  <div style={{
+                    position: 'absolute', top: 1, right: 2,
+                    fontSize: 9, lineHeight: 1,
+                    opacity: 0.6,
+                  }}>⏳</div>
+                )
+              ) : (
+                <div style={{
+                  position: 'absolute', top: 1, right: 2,
+                  fontSize: 9, lineHeight: 1,
+                }}>⚡</div>
+              )}
               <GeneratorStars />
             </>
           )}
@@ -197,6 +220,7 @@ const Cell: React.FC<CellProps> = memo(({
     prev.item?.instanceId === next.item?.instanceId &&
     prev.item?.isLocked === next.item?.isLocked &&
     prev.item?.lockHits === next.item?.lockHits &&
+    prev.item?.storedCount === next.item?.storedCount &&
     prev.isSelected === next.isSelected &&
     prev.isDraggingFrom === next.isDraggingFrom &&
     prev.isDropTarget === next.isDropTarget &&
